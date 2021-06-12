@@ -9,7 +9,3 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
-
-model Test {
-    id Int @id @default(autoincrement())
-}
