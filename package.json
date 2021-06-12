@@ -1,0 +1,12 @@
+{
+	"name": "db",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"migrate-dev": "npx prisma migrate dev --skip-generate"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
