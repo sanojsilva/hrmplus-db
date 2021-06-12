@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"migrate-dev": "npx prisma migrate dev --skip-generate"
+		"migrate-dev": "npx prisma migrate dev --skip-generate",
+		"init": "node init.js && npm run migrate-dev"
 	},
 	"keywords": [],
 	"author": "",
