@@ -11,47 +11,61 @@ generator client {
 }
 
 model User {
-  id                 Int      @id @default(autoincrement())
-  email              String   @unique
+  id                 Int         @id @default(autoincrement())
+  email              String      @unique
   username           String?
-  password           String   @db.VarChar(255)
-  resetPasswordToken String?
-  active             Boolean  @default(false)
-  roleId             Int
-  role               Role     @relation(fields: [roleId], references: [id])
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  // createdBy          String   @db.VarChar(255)
-  // UpdatedBy          String   @db.VarChar(255)
+  password           String      @db.VarChar(255)
+  resetPasswordToken String?     @map("reset_password_token")
+  active             Boolean     @default(false)
+  roles              UserRoles[]
+  createdAt          DateTime    @default(now()) @map("created_at")
+  updatedAt          DateTime    @updatedAt @map("updated_at")
+
+  @@map("user")
 }
 
 model Permission {
-  id              Int              @id @default(autoincrement())
-  action          String           @db.VarChar(255)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  userPermissions UserPermission[]
-  //add the module
-  // createdBy String   @db.VarChar(255)
-  // UpdatedBy String   @db.VarChar(255)
-}
+  id        Int               @id @default(autoincrement())
+  name      String            @db.VarChar(255)
+  route     String            @db.VarChar(100)
+  module    String            @db.VarChar(100)
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @updatedAt @map("updated_at")
+  roles     RolePermissions[]
 
-model UserPermission {
-  id           Int        @id @default(autoincrement())
-  permissionId Int
-  permission   Permission @relation(fields: [permissionId], references: [id])
-  roleId       Int
-  role         Role       @relation(fields: [roleId], references: [id])
-
+  @@map("permission")
 }
 
 model Role {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  users           User[]
-  userPermissions UserPermission[]
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  users       UserRoles[]
+  permissions RolePermissions[]
+
+  @@map("role")
+}
+
+model RolePermissions {
+  roleId       Int        @map("role_id")
+  role         Role       @relation(fields: [roleId], references: [id])
+  permissionId Int        @map("permission_id")
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+
+  @@id([roleId, permissionId])
+  @@map("role_permission")
+}
+
+model UserRoles {
+  roleId Int  @map("role_id")
+  role   Role @relation(fields: [roleId], references: [id])
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@id([roleId, userId])
+  @@map("user_role")
 }
 
 model Employee {
