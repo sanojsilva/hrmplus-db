@@ -42,6 +42,7 @@ model UserPermission {
   permission   Permission @relation(fields: [permissionId], references: [id])
   roleId       Int
   role         Role       @relation(fields: [roleId], references: [id])
+
 }
 
 model Role {
@@ -51,4 +52,224 @@ model Role {
   updatedAt       DateTime         @updatedAt
   users           User[]
   userPermissions UserPermission[]
+}
+
+model Employee {
+  id                           Int      @id @default(autoincrement())
+  firstName                    String   @map("first_name")
+  middleName                   String   @map("middle_name")
+  lastName                     String   @map("last_name")
+  dateOfBirth                  DateTime @map("date_of_birth")
+  gender                       Gender   @default(SELECT)
+  salutation                   String
+  joinedDate                   DateTime @map("joined_date")
+  employeeCode                 String   @map("employee_code")
+  qrCode                       String   @map("qr_code")
+  emergencyPerson              String   @map("emergency_person")
+  emergencyContact             String   @map("emergency_contact")
+  emergencyContactRelationship String   @map("emergency_contact_relationship")
+  image                        String   @db.VarChar(255)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+
+  contactDetailId          Int
+  contactDetails           EmpContactDetails       @relation(fields: [contactDetailId], references: [id])
+  personalDetailId         Int
+  personalDetails          EmpPersonalDetails      @relation(fields: [personalDetailId], references: [id])
+  educationQualificationId Int
+  eduQualifications        EducationQualifications @relation(fields: [educationQualificationId], references: [id])
+  workHistoryId            Int
+  workHistory              WorkHistory             @relation(fields: [workHistoryId], references: [id])
+  gradeId                  Int
+  Grade                    Grade                   @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId       Int
+  healthInsuarance         HealthInsuarance        @relation(fields: [healthInsuaranceId], references: [id])
+  designationId            Int
+  designation              Designation             @relation(fields: [designationId], references: [id])
+  salaryId                 Int
+  salary                   Salary                  @relation(fields: [salaryId], references: [id])
+  departmentId             Int
+  department               Department              @relation(fields: [departmentId], references: [id])
+  internalWorkHistoryId    Int
+  internalWorkHistory      InternalWorkHistory     @relation(fields: [internalWorkHistoryId], references: [id])
+  employmentTypeId         Int
+  employmentType           EmploymentType          @relation(fields: [employmentTypeId], references: [id])
+
+}
+
+model EmpContactDetails {
+  id                         Int        @id @default(autoincrement())
+  mobileNo                   String     @map("mobile_no") @db.VarChar(255)
+  personalEmail              String     @map("personal_email") @db.VarChar(255)
+  companyEmail               String     @map("company_email") @db.VarChar(255)
+  prefferedEmail             String     @map("preffered_email") @db.VarChar(255)
+  currentAddr                String     @map("current_addr") @db.VarChar(255)
+  currentAccommodationType   String     @map("current_accommodation_type") @db.VarChar(255)
+  permenantAddr              String     @map("permenant_addr") @db.VarChar(255)
+  permenantAccommodationType String     @map("permenant_accommodation_type") @db.VarChar(255)
+  createdAt                  DateTime   @default(now())
+  updatedAt                  DateTime   @updatedAt
+  employee                   Employee[]
+
+  @@map("emp_contact_details")
+}
+
+model EmpPersonalDetails {
+  id            Int           @id @default(autoincrement())
+  nic           String        @db.VarChar(255)
+  maritalStatus MaritalStatus @default(SELECT) @map("marital_status")
+  bloodGroup    String        @map("blood_group") @db.VarChar(255)
+  familyDetails String        @map("family_details")
+  healthDetails String        @map("health_details")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  employee      Employee[]
+
+  @@map("emp_personal_details")
+}
+
+model EducationQualifications {
+  id          Int        @id @default(autoincrement())
+  SchoolOrUni String     @map("school_or_uni") @db.VarChar(255)
+  level       String     @db.VarChar(255)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employee    Employee[]
+
+  @@map("education_qualifications")
+}
+
+model WorkHistory {
+  id          Int        @id @default(autoincrement())
+  comapny     String     @db.VarChar(255)
+  designation String     @db.VarChar(255)
+  salary      String     @db.VarChar(255)
+  addr        String     @db.VarChar(255)
+  contact     String     @db.VarChar(255)
+  experience  String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employee    Employee[]
+
+  @@map("work_history")
+}
+
+model Grade {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(255)
+  //pay?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  employee  Employee[]
+}
+
+model HealthInsuarance {
+  id         Int                      @id @default(autoincrement())
+  number     String                   @unique @db.VarChar(255)
+  createdAt  DateTime                 @default(now())
+  updatedAt  DateTime                 @updatedAt
+  providerId Int
+  provider   HealthInsuaranceProvider @relation(fields: [providerId], references: [id])
+  employee   Employee[]
+
+  @@map("health_insuarance")
+}
+
+model HealthInsuaranceProvider {
+  id               Int                @id @default(autoincrement())
+  provider         String             @unique @db.VarChar(255)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  healthInsuarance HealthInsuarance[]
+
+  @@map("health_insuarance_provider")
+}
+
+model Designation {
+  id           Int                   @id @default(autoincrement())
+  name         String                @unique @db.VarChar(255)
+  description  String
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  skills       SkillsOfDesignation[]
+  employee     Employee[]
+  internalWork InternalWorkHistory[]
+}
+
+model SkillsOfDesignation {
+  id            Int         @id @default(autoincrement())
+  skillId       Int         @map("skill_id")
+  skill         Skills      @relation(fields: [skillId], references: [id])
+  designationId Int         @map("designation_id")
+  designation   Designation @relation(fields: [designationId], references: [id])
+
+
+  @@map("skills_of_designation")
+}
+
+model Skills {
+  id           Int                   @id @default(autoincrement())
+  name         String                @unique @db.VarChar(255)
+  description  String
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  designations SkillsOfDesignation[]
+
+}
+
+model Salary {
+  id          Int        @id @default(autoincrement())
+  bankName    String     @map("bank_name") @db.VarChar(255)
+  bankAccount String     @map("bank_account") @db.VarChar(255)
+  mode        String     @db.VarChar(255)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employee    Employee[]
+}
+
+model Department {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(255)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  employee  Employee[]
+}
+
+model EmploymentType {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(255)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  employee  Employee[]
+
+  @@map("employment_type")
+}
+
+model InternalWorkHistory {
+  id            Int         @id @default(autoincrement())
+  fromDate      DateTime    @map("from_date")
+  toDate        DateTime    @map("to_date")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  employee      Employee[]
+  designationId Int
+  designation   Designation @relation(fields: [designationId], references: [id])
+
+  @@map("internal_work_history")
+}
+
+enum MaritalStatus {
+  SELECT
+  MARRIED
+  SINGLE
+  DIVORCED
+
+  @@map("marital_status")
+}
+
+enum Gender {
+  SELECT
+  MALE
+  FEMALE
+  OTHER
 }
