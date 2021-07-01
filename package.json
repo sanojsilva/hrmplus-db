@@ -4,9 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"migrate-dev": "npx prisma migrate dev",
-		"init": "npm install && node init.js && npm run migrate-dev",
-		"update": "git fetch && git pull && npm install && npm run migrate-dev",
+		"migrate:dev": "npx prisma migrate dev",
+		"reset:dev": "npx prisma migrate reset",
+		"init": "npm install && node init.js && npm run migrate:dev",
+		"update": "git fetch && git pull && npm install && npm run migrate:dev",
 		"studio": "npx prisma studio"
 	},
 	"keywords": [],
