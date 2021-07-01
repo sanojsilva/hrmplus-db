@@ -74,7 +74,7 @@ model Employee {
   middleName                   String   @map("middle_name")
   lastName                     String   @map("last_name")
   dateOfBirth                  DateTime @map("date_of_birth")
-  gender                       Gender   @default(SELECT)
+  gender                       Gender
   salutation                   String
   joinedDate                   DateTime @map("joined_date")
   employeeCode                 String   @map("employee_code")
@@ -83,8 +83,8 @@ model Employee {
   emergencyContact             String   @map("emergency_contact")
   emergencyContactRelationship String   @map("emergency_contact_relationship")
   image                        String   @db.VarChar(255)
-  createdAt                    DateTime @default(now())
-  updatedAt                    DateTime @updatedAt
+  createdAt                    DateTime @default(now()) @map("created_at")
+  updatedAt                    DateTime @updatedAt @map("updated_at")
 
   contactDetailId          Int
   contactDetails           EmpContactDetails       @relation(fields: [contactDetailId], references: [id])
@@ -121,8 +121,8 @@ model EmpContactDetails {
   currentAccommodationType   String     @map("current_accommodation_type") @db.VarChar(255)
   permenantAddr              String     @map("permenant_addr") @db.VarChar(255)
   permenantAccommodationType String     @map("permenant_accommodation_type") @db.VarChar(255)
-  createdAt                  DateTime   @default(now())
-  updatedAt                  DateTime   @updatedAt
+  createdAt                  DateTime   @default(now()) @map("created_at")
+  updatedAt                  DateTime   @updatedAt @map("updated_at")
   employee                   Employee[]
 
   @@map("emp_contact_details")
@@ -131,12 +131,12 @@ model EmpContactDetails {
 model EmpPersonalDetails {
   id            Int           @id @default(autoincrement())
   nic           String        @db.VarChar(255)
-  maritalStatus MaritalStatus @default(SELECT) @map("marital_status")
+  maritalStatus MaritalStatus @map("marital_status")
   bloodGroup    String        @map("blood_group") @db.VarChar(255)
   familyDetails String        @map("family_details")
   healthDetails String        @map("health_details")
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
   employee      Employee[]
 
   @@map("emp_personal_details")
@@ -146,8 +146,8 @@ model EducationQualifications {
   id          Int        @id @default(autoincrement())
   SchoolOrUni String     @map("school_or_uni") @db.VarChar(255)
   level       String     @db.VarChar(255)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
   employee    Employee[]
 
   @@map("education_qualifications")
@@ -161,8 +161,8 @@ model WorkHistory {
   addr        String     @db.VarChar(255)
   contact     String     @db.VarChar(255)
   experience  String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
   employee    Employee[]
 
   @@map("work_history")
@@ -172,16 +172,16 @@ model Grade {
   id        Int        @id @default(autoincrement())
   name      String     @unique @db.VarChar(255)
   //pay?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
   employee  Employee[]
 }
 
 model HealthInsuarance {
   id         Int                      @id @default(autoincrement())
   number     String                   @unique @db.VarChar(255)
-  createdAt  DateTime                 @default(now())
-  updatedAt  DateTime                 @updatedAt
+  createdAt  DateTime                 @default(now()) @map("created_at")
+  updatedAt  DateTime                 @updatedAt @map("updated_at")
   providerId Int
   provider   HealthInsuaranceProvider @relation(fields: [providerId], references: [id])
   employee   Employee[]
@@ -192,8 +192,8 @@ model HealthInsuarance {
 model HealthInsuaranceProvider {
   id               Int                @id @default(autoincrement())
   provider         String             @unique @db.VarChar(255)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
   healthInsuarance HealthInsuarance[]
 
   @@map("health_insuarance_provider")
@@ -203,8 +203,8 @@ model Designation {
   id           Int                   @id @default(autoincrement())
   name         String                @unique @db.VarChar(255)
   description  String
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @updatedAt @map("updated_at")
   skills       SkillsOfDesignation[]
   employee     Employee[]
   internalWork InternalWorkHistory[]
@@ -225,8 +225,8 @@ model Skills {
   id           Int                   @id @default(autoincrement())
   name         String                @unique @db.VarChar(255)
   description  String
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @updatedAt @map("updated_at")
   designations SkillsOfDesignation[]
 
 }
@@ -236,24 +236,24 @@ model Salary {
   bankName    String     @map("bank_name") @db.VarChar(255)
   bankAccount String     @map("bank_account") @db.VarChar(255)
   mode        String     @db.VarChar(255)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
   employee    Employee[]
 }
 
 model Department {
   id        Int        @id @default(autoincrement())
   name      String     @db.VarChar(255)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
   employee  Employee[]
 }
 
 model EmploymentType {
   id        Int        @id @default(autoincrement())
   name      String     @db.VarChar(255)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
   employee  Employee[]
 
   @@map("employment_type")
@@ -263,8 +263,8 @@ model InternalWorkHistory {
   id            Int         @id @default(autoincrement())
   fromDate      DateTime    @map("from_date")
   toDate        DateTime    @map("to_date")
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
   employee      Employee[]
   designationId Int
   designation   Designation @relation(fields: [designationId], references: [id])
@@ -273,7 +273,6 @@ model InternalWorkHistory {
 }
 
 enum MaritalStatus {
-  SELECT
   MARRIED
   SINGLE
   DIVORCED
@@ -282,7 +281,6 @@ enum MaritalStatus {
 }
 
 enum Gender {
-  SELECT
   MALE
   FEMALE
   OTHER
