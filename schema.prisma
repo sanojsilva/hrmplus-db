@@ -238,15 +238,16 @@ model Salary {
   mode        String     @db.VarChar(255)
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
-  employee    Employee[]
+  employees   Employee[]
 }
 
 model Department {
-  id        Int        @id @default(autoincrement())
-  name      String     @db.VarChar(255)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  employee  Employee[]
+  id            Int            @id @default(autoincrement())
+  name          String         @db.VarChar(255)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  employees     Employee[]
+  staffingPlans StaffingPlan[]
 }
 
 model EmploymentType {
@@ -254,7 +255,7 @@ model EmploymentType {
   name      String     @db.VarChar(255)
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  employee  Employee[]
+  employees Employee[]
 
   @@map("employment_type")
 }
@@ -284,4 +285,34 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+model StaffingPlan {
+  id                  Int                  @id @default(autoincrement())
+  name                String               @db.VarChar(200)
+  fromDate            DateTime             @map("from_date")
+  toDate              DateTime             @map("to_date")
+  estimatedBudget     Decimal              @map("estimated_budget") @db.Decimal(18, 2)
+  departmentId        Int                  @map("department_id")
+  department          Department           @relation(fields: [departmentId], references: [id])
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  staffingPlanDetails StaffingPlanDetail[]
+
+  @@map("staffing_plan")
+}
+
+model StaffingPlanDetail {
+  id              Int          @id @default(autoincrement())
+  noOfPositions   Int          @map("no_of_positions")
+  positionsCost   Decimal      @map("position_cost") @db.Decimal(18, 2)
+  estimatedCost   Decimal      @map("estimated_cost") @db.Decimal(18, 2)
+  currentOpenings Int          @map("current_openings")
+  currentCount    Int          @map("current_count")
+  staffingPlanId  Int          @map("staffing_plan_id")
+  staffingPlan    StaffingPlan @relation(fields: [staffingPlanId], references: [id])
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@map("staffing_plan_detail")
 }
