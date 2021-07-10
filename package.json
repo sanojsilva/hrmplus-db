@@ -6,8 +6,10 @@
 	"scripts": {
 		"migrate:dev": "npx prisma migrate dev",
 		"reset:dev": "npx prisma migrate reset",
-		"init": "npm install && node init.js && npm run migrate:dev",
-		"update": "git fetch && git pull && npm install && npm run migrate:dev",
+		"db:push": "npx prisma db push",
+		"gen": "npx prisma generate",
+		"init": "npm install && node init.js && npm run db:push && npm run gen",
+		"update": "git fetch && git pull && npm install && npm run db:push && npm run gen",
 		"studio": "npx prisma studio"
 	},
 	"keywords": [],
