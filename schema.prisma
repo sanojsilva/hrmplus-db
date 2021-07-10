@@ -71,7 +71,7 @@ model UserRoles {
 model Employee {
   id                           Int      @id @default(autoincrement())
   firstName                    String   @map("first_name")
-  middleName                   String   @map("middle_name")
+  middleName                   String?  @map("middle_name")
   lastName                     String   @map("last_name")
   dateOfBirth                  DateTime @map("date_of_birth")
   gender                       Gender
@@ -86,44 +86,42 @@ model Employee {
   createdAt                    DateTime @default(now()) @map("created_at")
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
-  contactDetailId          Int
-  contactDetails           EmpContactDetails       @relation(fields: [contactDetailId], references: [id])
-  personalDetailId         Int
-  personalDetails          EmpPersonalDetails      @relation(fields: [personalDetailId], references: [id])
-  educationQualificationId Int
-  eduQualifications        EducationQualifications @relation(fields: [educationQualificationId], references: [id])
-  workHistoryId            Int
-  workHistory              WorkHistory             @relation(fields: [workHistoryId], references: [id])
-  gradeId                  Int
-  Grade                    Grade                   @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId       Int
-  healthInsuarance         HealthInsuarance        @relation(fields: [healthInsuaranceId], references: [id])
-  designationId            Int
-  designation              Designation             @relation(fields: [designationId], references: [id])
-  salaryId                 Int
-  salary                   Salary                  @relation(fields: [salaryId], references: [id])
-  departmentId             Int
-  department               Department              @relation(fields: [departmentId], references: [id])
-  internalWorkHistoryId    Int
-  internalWorkHistory      InternalWorkHistory     @relation(fields: [internalWorkHistoryId], references: [id])
-  employmentTypeId         Int
-  employmentType           EmploymentType          @relation(fields: [employmentTypeId], references: [id])
+
+  contactDetails EmpContactDetails?
+
+  personalDetails    EmpPersonalDetails?
+  eduQualifications  EducationQualifications?
+  workHistory        WorkHistory?
+  gradeId            Int
+  grade              Grade                    @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId Int
+  healthInsuarance   HealthInsuarance         @relation(fields: [healthInsuaranceId], references: [id])
+  designationId      Int
+  designation        Designation              @relation(fields: [designationId], references: [id])
+  salary             Salary?
+  departmentId       Int
+  department         Department               @relation(fields: [departmentId], references: [id])
+
+  internalWorkHistory InternalWorkHistory?
+  employmentTypeId    Int
+  employmentType      EmploymentType       @relation(fields: [employmentTypeId], references: [id])
 
 }
 
 model EmpContactDetails {
-  id                         Int        @id @default(autoincrement())
-  mobileNo                   String     @map("mobile_no") @db.VarChar(255)
-  personalEmail              String     @map("personal_email") @db.VarChar(255)
-  companyEmail               String     @map("company_email") @db.VarChar(255)
-  prefferedEmail             String     @map("preffered_email") @db.VarChar(255)
-  currentAddr                String     @map("current_addr") @db.VarChar(255)
-  currentAccommodationType   String     @map("current_accommodation_type") @db.VarChar(255)
-  permenantAddr              String     @map("permenant_addr") @db.VarChar(255)
-  permenantAccommodationType String     @map("permenant_accommodation_type") @db.VarChar(255)
-  createdAt                  DateTime   @default(now()) @map("created_at")
-  updatedAt                  DateTime   @updatedAt @map("updated_at")
-  employee                   Employee[]
+  id                         Int      @id @default(autoincrement())
+  mobileNo                   String   @map("mobile_no") @db.VarChar(255)
+  personalEmail              String   @map("personal_email") @db.VarChar(255)
+  companyEmail               String   @map("company_email") @db.VarChar(255)
+  prefferedEmail             String   @map("preffered_email") @db.VarChar(255)
+  currentAddr                String   @map("current_addr") @db.VarChar(255)
+  currentAccommodationType   String   @map("current_accommodation_type") @db.VarChar(255)
+  permenantAddr              String   @map("permenant_addr") @db.VarChar(255)
+  permenantAccommodationType String   @map("permenant_accommodation_type") @db.VarChar(255)
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
+  employeeId                 Int
+  employee                   Employee @relation(fields: [employeeId], references: [id])
 
   @@map("emp_contact_details")
 }
@@ -137,33 +135,36 @@ model EmpPersonalDetails {
   healthDetails String        @map("health_details")
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")
-  employee      Employee[]
+  employeeId    Int
+  employee      Employee      @relation(fields: [employeeId], references: [id])
 
   @@map("emp_personal_details")
 }
 
 model EducationQualifications {
-  id          Int        @id @default(autoincrement())
-  SchoolOrUni String     @map("school_or_uni") @db.VarChar(255)
-  level       String     @db.VarChar(255)
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  employee    Employee[]
+  id          Int      @id @default(autoincrement())
+  SchoolOrUni String   @map("school_or_uni") @db.VarChar(255)
+  level       String   @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
 
   @@map("education_qualifications")
 }
 
 model WorkHistory {
-  id          Int        @id @default(autoincrement())
-  comapny     String     @db.VarChar(255)
-  designation String     @db.VarChar(255)
-  salary      String     @db.VarChar(255)
-  addr        String     @db.VarChar(255)
-  contact     String     @db.VarChar(255)
+  id          Int      @id @default(autoincrement())
+  comapny     String   @db.VarChar(255)
+  designation String   @db.VarChar(255)
+  salary      String   @db.VarChar(255)
+  addr        String   @db.VarChar(255)
+  contact     String   @db.VarChar(255)
   experience  String
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  employee    Employee[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
 
   @@map("work_history")
 }
@@ -232,13 +233,14 @@ model Skills {
 }
 
 model Salary {
-  id          Int        @id @default(autoincrement())
-  bankName    String     @map("bank_name") @db.VarChar(255)
-  bankAccount String     @map("bank_account") @db.VarChar(255)
-  mode        String     @db.VarChar(255)
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  employee    Employee[]
+  id          Int      @id @default(autoincrement())
+  bankName    String   @map("bank_name") @db.VarChar(255)
+  bankAccount String   @map("bank_account") @db.VarChar(255)
+  mode        String   @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
 }
 
 model Department {
@@ -265,7 +267,8 @@ model InternalWorkHistory {
   toDate        DateTime    @map("to_date")
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
-  employee      Employee[]
+  employeeId    Int
+  employee      Employee    @relation(fields: [employeeId], references: [id])
   designationId Int
   designation   Designation @relation(fields: [designationId], references: [id])
 
