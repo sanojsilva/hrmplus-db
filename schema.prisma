@@ -305,10 +305,10 @@ model StaffingPlan {
 model StaffingPlanDetail {
   id              Int          @id @default(autoincrement())
   noOfPositions   Int          @map("no_of_positions")
-  positionsCost   Decimal      @map("position_cost") @db.Decimal(18, 2)
+  positionCost    Decimal      @map("position_cost") @db.Decimal(18, 2)
   estimatedCost   Decimal      @map("estimated_cost") @db.Decimal(18, 2)
-  currentOpenings Int          @map("current_openings")
-  currentCount    Int          @map("current_count")
+  currentOpenings Int          @default(0) @map("current_openings")
+  currentCount    Int          @default(0) @map("current_count")
   staffingPlanId  Int          @map("staffing_plan_id")
   staffingPlan    StaffingPlan @relation(fields: [staffingPlanId], references: [id])
   createdAt       DateTime     @default(now()) @map("created_at")
