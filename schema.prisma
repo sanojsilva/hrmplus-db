@@ -200,14 +200,15 @@ model HealthInsuaranceProvider {
 }
 
 model Designation {
-  id           Int                   @id @default(autoincrement())
-  name         String                @unique @db.VarChar(255)
-  description  String
-  createdAt    DateTime              @default(now()) @map("created_at")
-  updatedAt    DateTime              @updatedAt @map("updated_at")
-  skills       SkillsOfDesignation[]
-  employee     Employee[]
-  internalWork InternalWorkHistory[]
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique @db.VarChar(255)
+  description         String
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  staffingPlanDetails StaffingPlanDetail[]
+  skills              SkillsOfDesignation[]
+  employee            Employee[]
+  internalWork        InternalWorkHistory[]
 }
 
 model SkillsOfDesignation {
@@ -304,6 +305,8 @@ model StaffingPlan {
 
 model StaffingPlanDetail {
   id              Int          @id @default(autoincrement())
+  designationId   Int
+  designation     Designation  @relation(fields: [designationId], references: [id])
   noOfPositions   Int          @map("no_of_positions")
   positionCost    Decimal      @map("position_cost") @db.Decimal(18, 2)
   estimatedCost   Decimal      @map("estimated_cost") @db.Decimal(18, 2)
