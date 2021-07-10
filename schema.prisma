@@ -251,6 +251,7 @@ model Department {
   updatedAt     DateTime       @updatedAt @map("updated_at")
   employees     Employee[]
   staffingPlans StaffingPlan[]
+  jobOpening    JobOpening[]
 }
 
 model EmploymentType {
@@ -318,4 +319,55 @@ model StaffingPlanDetail {
   updatedAt       DateTime     @updatedAt @map("updated_at")
 
   @@map("staffing_plan_detail")
+}
+
+model JobOpening {
+  id          Int      @id @default(autoincrement())
+  jobTitle    String   @map("job_title") @db.VarChar(100)
+  status      String   @db.VarChar(100)
+  description String   @db.VarChar(255)
+  saleryRange String   @db.map("salery_range") @db.VarChar(255)
+  published   DateTime
+
+  jobOpenigId  Int
+  department   Department     @relation(fields: [jobOpenigId], references: [id])
+  jobApplicant JobApplicant[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("job_opening")
+}
+
+model JobApplicantSource {
+  id      Int    @id @default(autoincrement())
+  name    String @db.VarChar(100)
+  details String @db.VarChar(255)
+
+  jobApplicant JobApplicant[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("job_applicant_source")
+}
+
+model JobApplicant {
+  id            Int      @id @default(autoincrement())
+  applicantName String   @map("applicant_name") @db.VarChar(100)
+  email         String   @db.VarChar(200)
+  status        String   @db.VarChar(50)
+  phoneNumber   Int      @map("phone_number")
+  dateOfBirth   DateTime @map("date_of_birth")
+  resume        String   @db.VarChar(255)
+  coverLetter   String   @db.map("cover_letter") @db.VarChar(255)
+
+  jobApplicantId     Int
+  jobOpening         JobOpening         @relation(fields: [jobApplicantId], references: [id])
+  jobApplicantSource JobApplicantSource @relation(fields: [jobApplicantId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("job_applicant")
 }
