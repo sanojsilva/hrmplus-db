@@ -212,6 +212,7 @@ model Designation {
   internalWork InternalWorkHistory[]
   jobOpening   JobOpening[]
   staffingPlanDetails StaffingPlanDetail[]
+  jobOffer JobOffer[]
 
 }
 
@@ -382,4 +383,41 @@ model JobApplicant {
 
 
   @@map("job_applicant")
+}
+
+model JobOffer {
+  id            Int      @id @default(autoincrement())
+  status        String   @db.VarChar(50)
+  offerDate   DateTime @map("offer_date")
+  description        String   @db.VarChar(255)
+
+  designationId         Int
+  designation           Designation         @relation(fields: [designationId], references: [id])
+  offerTerms OfferTermOfJobOffer[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+
+  @@map("job_offer")
+}
+
+model OfferTerm {
+id            Int      @id @default(autoincrement())
+term        String   @db.VarChar(255)
+jobOffers OfferTermOfJobOffer[]
+
+  @@map("offer_term")
+}
+
+model OfferTermOfJobOffer {
+  id            Int         @id @default(autoincrement())
+  value        String   @db.VarChar(255)    
+  offerTermId       Int         @map("offer_term_id")
+  offerterm         OfferTerm      @relation(fields: [offerTermId], references: [id])
+  jobOfferId Int         @map("joboffer_id")
+  jobOffer   JobOffer @relation(fields: [jobOfferId], references: [id])
+
+
+  @@map("offer_term_of_job_offer")
 }
