@@ -106,6 +106,8 @@ model Employee {
   employmentTypeId    Int
   employmentType      EmploymentType       @relation(fields: [employmentTypeId], references: [id])
 
+  JobApplicant   JobApplicant? @relation(fields: [jObApplicantId], references: [id])
+  jObApplicantId Int?
 }
 
 model EmpContactDetails {
@@ -201,14 +203,17 @@ model HealthInsuaranceProvider {
 }
 
 model Designation {
-  id           Int                   @id @default(autoincrement())
-  name         String                @unique @db.VarChar(255)
-  description  String
-  createdAt    DateTime              @default(now()) @map("created_at")
-  updatedAt    DateTime              @updatedAt @map("updated_at")
-  skills       SkillsOfDesignation[]
-  employee     Employee[]
-  internalWork InternalWorkHistory[]
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique @db.VarChar(255)
+  description         String
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  skills              SkillsOfDesignation[]
+  employee            Employee[]
+  internalWork        InternalWorkHistory[]
+  jobOpening          JobOpening[]
+  staffingPlanDetails StaffingPlanDetail[]
+
 }
 
 model SkillsOfDesignation {
@@ -241,14 +246,18 @@ model Salary {
   updatedAt   DateTime @updatedAt @map("updated_at")
   employeeId  Int
   employee    Employee @relation(fields: [employeeId], references: [id])
+
+
 }
 
 model Department {
-  id        Int        @id @default(autoincrement())
-  name      String     @db.VarChar(255)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  employee  Employee[]
+  id            Int            @id @default(autoincrement())
+  name          String         @db.VarChar(255)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  employees     Employee[]
+  staffingPlans StaffingPlan[]
+  jobOpening    JobOpening[]
 }
 
 model EmploymentType {
@@ -256,7 +265,7 @@ model EmploymentType {
   name      String     @db.VarChar(255)
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  employee  Employee[]
+  employees Employee[]
 
   @@map("employment_type")
 }
@@ -287,4 +296,95 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+model StaffingPlan {
+  id                  Int                  @id @default(autoincrement())
+  name                String               @db.VarChar(200)
+  fromDate            DateTime             @map("from_date")
+  toDate              DateTime             @map("to_date")
+  estimatedBudget     Decimal              @map("estimated_budget") @db.Decimal(18, 2)
+  departmentId        Int                  @map("department_id")
+  department          Department           @relation(fields: [departmentId], references: [id])
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  staffingPlanDetails StaffingPlanDetail[]
+
+  @@map("staffing_plan")
+}
+
+model StaffingPlanDetail {
+  id              Int          @id @default(autoincrement())
+  designationId   Int
+  designation     Designation  @relation(fields: [designationId], references: [id])
+  noOfPositions   Int          @map("no_of_positions")
+  positionCost    Decimal      @map("position_cost") @db.Decimal(18, 2)
+  estimatedCost   Decimal      @map("estimated_cost") @db.Decimal(18, 2)
+  currentOpenings Int          @default(0) @map("current_openings")
+  currentCount    Int          @default(0) @map("current_count")
+  staffingPlanId  Int          @map("staffing_plan_id")
+  staffingPlan    StaffingPlan @relation(fields: [staffingPlanId], references: [id])
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@map("staffing_plan_detail")
+}
+
+model JobOpening {
+  id          Int      @id @default(autoincrement())
+  jobTitle    String   @map("job_title") @db.VarChar(100)
+  status      String   @db.VarChar(100)
+  description String   @db.VarChar(255)
+  salaryRange String   @map("salary_range") @db.VarChar(255)
+  published   DateTime
+
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  designationId Int
+  Designation   Designation? @relation(fields: [designationId], references: [id])
+
+  jobApplicant JobApplicant[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("job_opening")
+}
+
+model JobApplicantSource {
+  id      Int    @id @default(autoincrement())
+  name    String @db.VarChar(100)
+  details String @db.VarChar(255)
+
+  jobApplicant JobApplicant[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("job_applicant_source")
+}
+
+model JobApplicant {
+  id            Int      @id @default(autoincrement())
+  applicantName String   @map("applicant_name") @db.VarChar(100)
+  email         String   @db.VarChar(200)
+  status        String   @db.VarChar(50)
+  phoneNumber   Int      @map("phone_number")
+  dateOfBirth   DateTime @map("date_of_birth")
+  resume        String   @db.VarChar(255)
+  coverLetter   String   @map("cover_letter") @db.VarChar(255)
+
+  jobOpeningId         Int
+  jobApplicantSourceId Int
+  jobOpening           JobOpening         @relation(fields: [jobOpeningId], references: [id])
+  jobApplicantSource   JobApplicantSource @relation(fields: [jobApplicantSourceId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  Employee Employee[]
+
+
+  @@map("job_applicant")
 }
