@@ -89,25 +89,26 @@ model Employee {
 
   contactDetails EmpContactDetails?
 
-  personalDetails    EmpPersonalDetails?
-  eduQualifications  EducationQualifications?
-  workHistory        WorkHistory?
-  gradeId            Int
-  grade              Grade                    @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId Int
-  healthInsuarance   HealthInsuarance         @relation(fields: [healthInsuaranceId], references: [id])
-  designationId      Int
-  designation        Designation              @relation(fields: [designationId], references: [id])
-  salary             Salary?
-  departmentId       Int
-  department         Department               @relation(fields: [departmentId], references: [id])
-
+  personalDetails     EmpPersonalDetails?
+  eduQualifications   EducationQualifications?
+  workHistory         WorkHistory?
   internalWorkHistory InternalWorkHistory?
+  salary              Salary?
+  gradeId             Int
+  grade               Grade                    @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId  Int
+  healthInsuarance    HealthInsuarance         @relation(fields: [healthInsuaranceId], references: [id])
+  designationId       Int
+  designation         Designation              @relation(fields: [designationId], references: [id])
+  departmentId        Int
+  department          Department               @relation(fields: [departmentId], references: [id])
   employmentTypeId    Int
-  employmentType      EmploymentType       @relation(fields: [employmentTypeId], references: [id])
+  employmentType      EmploymentType           @relation(fields: [employmentTypeId], references: [id])
+  jObApplicantId      Int?
+  JobApplicant        JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
 
-  JobApplicant   JobApplicant? @relation(fields: [jObApplicantId], references: [id])
-  jObApplicantId Int?
+
+  @@map("employee")
 }
 
 model EmpContactDetails {
@@ -178,6 +179,8 @@ model Grade {
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
   employee  Employee[]
+
+  @@map("grade")
 }
 
 model HealthInsuarance {
@@ -214,6 +217,8 @@ model Designation {
   jobOpening          JobOpening[]
   staffingPlanDetails StaffingPlanDetail[]
 
+
+  @@map("designation")
 }
 
 model SkillsOfDesignation {
@@ -235,6 +240,7 @@ model Skills {
   updatedAt    DateTime              @updatedAt @map("updated_at")
   designations SkillsOfDesignation[]
 
+  @@map("skills")
 }
 
 model Salary {
@@ -247,7 +253,7 @@ model Salary {
   employeeId  Int
   employee    Employee @relation(fields: [employeeId], references: [id])
 
-
+  @@map("salary")
 }
 
 model Department {
@@ -387,4 +393,36 @@ model JobApplicant {
 
 
   @@map("job_applicant")
+}
+
+model AppointmentLetter {
+  id              Int           @id @default(autoincrement())
+  body            String
+  Terms           CustomTerms[]
+  TermDescription String
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@map("appointment_letter")
+}
+
+model CustomTerms {
+  id                  Int               @id @default(autoincrement())
+  newName             String?           @map("new_name") @db.VarChar(255)
+  newDescription      String?           @map("new_description") @db.VarChar(255)
+  jobTermId           Int               @map("job_term_id")
+  letterId            Int               @map("letter_id")
+  appointmentLetterId AppointmentLetter @relation(fields: [letterId], references: [id])
+  appointmentLetters  JobTerms          @relation(fields: [jobTermId], references: [id])
+
+  @@map("custom_terms")
+}
+
+model JobTerms {
+  id                  Int           @id @default(autoincrement())
+  name                String
+  appointmentLetterId Int           @map("appointment_letter_id")
+  customTerms         CustomTerms[]
+
+  @@map("job_terms")
 }
