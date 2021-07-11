@@ -386,43 +386,43 @@ model JobApplicant {
   jobOpening           JobOpening         @relation(fields: [jobOpeningId], references: [id])
   jobApplicantSource   JobApplicantSource @relation(fields: [jobApplicantSourceId], references: [id])
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  Employee Employee[]
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  appointmentLetter AppointmentLetter?
+  Employee          Employee[]
 
 
   @@map("job_applicant")
 }
 
 model AppointmentLetter {
-  id              Int           @id @default(autoincrement())
-  body            String
-  Terms           CustomTerms[]
-  TermDescription String
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
+  id             Int           @id @default(autoincrement())
+  body           String
+  jobApplicantId Int
+  jobApplicant   JobApplicant  @relation(fields: [jobApplicantId], references: [id])
+  terms          CustomTerms[]
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
 
   @@map("appointment_letter")
 }
 
 model CustomTerms {
-  id                  Int               @id @default(autoincrement())
-  newName             String?           @map("new_name") @db.VarChar(255)
-  newDescription      String?           @map("new_description") @db.VarChar(255)
-  jobTermId           Int               @map("job_term_id")
-  letterId            Int               @map("letter_id")
-  appointmentLetterId AppointmentLetter @relation(fields: [letterId], references: [id])
-  appointmentLetters  JobTerms          @relation(fields: [jobTermId], references: [id])
+  id             Int               @id @default(autoincrement())
+  newName        Int
+  termName       JobTerms          @relation(fields: [newName], references: [id])
+  newDescription String            @map("new_description") @db.VarChar(255)
+  letterId       Int
+  letter         AppointmentLetter @relation(fields: [letterId], references: [id])
+
 
   @@map("custom_terms")
 }
 
 model JobTerms {
-  id                  Int           @id @default(autoincrement())
-  name                String
-  appointmentLetterId Int           @map("appointment_letter_id")
-  customTerms         CustomTerms[]
+  id          Int           @id @default(autoincrement())
+  name        String
+  customTerms CustomTerms[]
 
   @@map("job_terms")
 }
