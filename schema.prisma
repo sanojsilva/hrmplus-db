@@ -214,7 +214,6 @@ model Designation {
   skills              SkillsOfDesignation[]
   employee            Employee[]
   internalWork        InternalWorkHistory[]
-  jobOpening          JobOpening[]
   staffingPlanDetails StaffingPlanDetail[]
 
 
@@ -263,7 +262,6 @@ model Department {
   updatedAt     DateTime       @updatedAt @map("updated_at")
   employees     Employee[]
   staffingPlans StaffingPlan[]
-  jobOpening    JobOpening[]
 }
 
 model EmploymentType {
@@ -342,6 +340,7 @@ model StaffingPlanDetail {
   staffingPlan    StaffingPlan @relation(fields: [staffingPlanId], references: [id])
   createdAt       DateTime     @default(now()) @map("created_at")
   updatedAt       DateTime     @updatedAt @map("updated_at")
+  jobOpenings     JobOpening[]
 
   @@map("staffing_plan_detail")
 }
@@ -354,11 +353,8 @@ model JobOpening {
   salaryRange String   @map("salary_range") @db.VarChar(255)
   published   DateTime
 
-  departmentId Int
-  department   Department @relation(fields: [departmentId], references: [id])
-
-  designationId Int
-  Designation   Designation? @relation(fields: [designationId], references: [id])
+  staffingPlanDetailId Int
+  staffingPlanDetail   StaffingPlanDetail @relation(fields: [staffingPlanDetailId], references: [id])
 
   jobApplicant JobApplicant[]
 
