@@ -298,18 +298,20 @@ enum MaritalStatus {
   @@map("marital_status")
 }
 
-enum JobOfferStatus{
-AWAITING RESPONSE  @map("awaiting_response")
-ACCEPTED  @map("accepted")
-REJECTED  @map("rejected")
- @@map("job_offer_status")
+enum JobOfferStatus {
+  AWAITING_RESPONSE  @map("awaiting_response")
+  ACCEPTED           @map("accepted")
+  REJECTED           @map("rejected")
+
+  @@map("job_offer_status")
 }
 
 enum Gender {
-  MALE @map("male")
-  FEMALE @map("female")
-  OTHER @map("other")
-   @@map("gender")
+  MALE    @map("male")
+  FEMALE  @map("female")
+  OTHER   @map("other")
+
+  @@map("gender")
 }
 
 model StaffingPlan {
@@ -393,26 +395,25 @@ model JobApplicant {
   jobApplicantSourceId Int
   jobOpening           JobOpening         @relation(fields: [jobOpeningId], references: [id])
   jobApplicantSource   JobApplicantSource @relation(fields: [jobApplicantSourceId], references: [id])
-  jobOffer JobOffer?
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
-  appointmentLetter AppointmentLetter?
-  Employee          Employee[]
+  jobOffer             JobOffer?
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+  appointmentLetter    AppointmentLetter?
+  Employee             Employee[]
 
 
   @@map("job_applicant")
 }
 
-
 model JobOffer {
-  id            Int      @id @default(autoincrement())
-  status       JobOfferStatus
-  offerDate   DateTime @map("offer_date")
-  description        String   @db.VarChar(255)
+  id          Int            @id @default(autoincrement())
+  status      JobOfferStatus
+  offerDate   DateTime       @map("offer_date")
+  description String         @db.VarChar(255)
 
-  applicantId         Int
-  applicant           JobApplicant         @relation(fields: [applicantId], references: [id])
-  offerTerms OfferTermOfJobOffer[]
+  applicantId Int
+  applicant   JobApplicant          @relation(fields: [applicantId], references: [id])
+  offerTerms  OfferTermOfJobOffer[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -422,20 +423,20 @@ model JobOffer {
 }
 
 model OfferTerm {
-id            Int      @id @default(autoincrement())
-term        String   @db.VarChar(255)
-jobOffers OfferTermOfJobOffer[]
+  id        Int                   @id @default(autoincrement())
+  term      String                @db.VarChar(255)
+  jobOffers OfferTermOfJobOffer[]
 
   @@map("offer_term")
 }
 
 model OfferTermOfJobOffer {
-  id            Int         @id @default(autoincrement())
-  value        String   @db.VarChar(255)    
-  offerTermId       Int         @map("offer_term_id")
-  offerterm         OfferTerm      @relation(fields: [offerTermId], references: [id])
-  jobOfferId Int         @map("joboffer_id")
-  jobOffer   JobOffer @relation(fields: [jobOfferId], references: [id])
+  id          Int       @id @default(autoincrement())
+  value       String    @db.VarChar(255)
+  offerTermId Int       @map("offer_term_id")
+  offerterm   OfferTerm @relation(fields: [offerTermId], references: [id])
+  jobOfferId  Int       @map("joboffer_id")
+  jobOffer    JobOffer  @relation(fields: [jobOfferId], references: [id])
 
 
   @@map("offer_term_of_job_offer")
