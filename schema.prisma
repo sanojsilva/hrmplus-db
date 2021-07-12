@@ -340,18 +340,19 @@ model StaffingPlanDetail {
   staffingPlan    StaffingPlan @relation(fields: [staffingPlanId], references: [id])
   createdAt       DateTime     @default(now()) @map("created_at")
   updatedAt       DateTime     @updatedAt @map("updated_at")
+  jobOpened       Boolean      @default(false)
   jobOpenings     JobOpening[]
 
   @@map("staffing_plan_detail")
 }
 
 model JobOpening {
-  id          Int      @id @default(autoincrement())
-  jobTitle    String   @map("job_title") @db.VarChar(100)
-  status      String   @db.VarChar(100)
-  description String   @db.VarChar(255)
-  salaryRange String   @map("salary_range") @db.VarChar(255)
-  published   DateTime
+  id          Int     @id @default(autoincrement())
+  jobTitle    String  @map("job_title") @db.VarChar(100)
+  status      String  @db.VarChar(100)
+  description String  @db.VarChar(255)
+  salaryRange String  @map("salary_range") @db.VarChar(255)
+  published   Boolean @default(false)
 
   staffingPlanDetailId Int
   staffingPlanDetail   StaffingPlanDetail @relation(fields: [staffingPlanDetailId], references: [id])
