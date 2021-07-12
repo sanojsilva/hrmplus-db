@@ -378,23 +378,30 @@ model JobApplicantSource {
   @@map("job_applicant_source")
 }
 
+enum JobApplicantStatus {
+  OPEN      @map("open")
+  REJECTED  @map("rejected")
+  ACCEPTED  @map("accepted")
+}
+
 model JobApplicant {
-  id            Int      @id @default(autoincrement())
-  applicantName String   @map("applicant_name") @db.VarChar(100)
-  email         String   @db.VarChar(200)
-  status        String   @db.VarChar(50)
-  phoneNumber   Int      @map("phone_number")
-  dateOfBirth   DateTime @map("date_of_birth")
-  resume        String   @db.VarChar(255)
-  coverLetter   String   @map("cover_letter") @db.VarChar(255)
+  id            Int                @id @default(autoincrement())
+  applicantName String             @map("applicant_name") @db.VarChar(100)
+  email         String             @db.VarChar(200)
+  status        JobApplicantStatus
+  phoneNumber   String             @map("phone_number") @db.VarChar(12)
+  dateOfBirth   DateTime           @map("date_of_birth")
+  resume        String             @db.VarChar(255)
+  coverLetter   String             @map("cover_letter") @db.VarChar(255)
+  gender        Gender
 
   jobOpeningId         Int
-  jobApplicantSourceId Int
-  jobOpening           JobOpening         @relation(fields: [jobOpeningId], references: [id])
-  jobApplicantSource   JobApplicantSource @relation(fields: [jobApplicantSourceId], references: [id])
+  jobApplicantSourceId Int?
+  jobOpening           JobOpening          @relation(fields: [jobOpeningId], references: [id])
+  jobApplicantSource   JobApplicantSource? @relation(fields: [jobApplicantSourceId], references: [id])
   jobOffer             JobOffer?
-  createdAt            DateTime           @default(now()) @map("created_at")
-  updatedAt            DateTime           @updatedAt @map("updated_at")
+  createdAt            DateTime            @default(now()) @map("created_at")
+  updatedAt            DateTime            @updatedAt @map("updated_at")
   appointmentLetter    AppointmentLetter?
   Employee             Employee[]
 
