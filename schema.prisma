@@ -212,7 +212,6 @@ model Designation {
   internalWork InternalWorkHistory[]
   jobOpening   JobOpening[]
   staffingPlanDetails StaffingPlanDetail[]
-  jobOffer JobOffer[]
 
 }
 
@@ -288,10 +287,18 @@ enum MaritalStatus {
   @@map("marital_status")
 }
 
+enum JobOfferStatus{
+AWAITING RESPONSE  @map("awaiting_response")
+ACCEPTED  @map("accepted")
+REJECTED  @map("rejected")
+ @@map("job_offer_status")
+}
+
 enum Gender {
-  MALE
-  FEMALE
-  OTHER
+  MALE @map("male")
+  FEMALE @map("female")
+  OTHER @map("other")
+   @@map("gender")
 }
 
 model StaffingPlan {
@@ -380,6 +387,7 @@ model JobApplicant {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   Employee Employee[]
+  jobOffer JobOffer?
 
 
   @@map("job_applicant")
@@ -387,12 +395,12 @@ model JobApplicant {
 
 model JobOffer {
   id            Int      @id @default(autoincrement())
-  status        String   @db.VarChar(50)
+  status       JobOfferStatus
   offerDate   DateTime @map("offer_date")
   description        String   @db.VarChar(255)
 
-  designationId         Int
-  designation           Designation         @relation(fields: [designationId], references: [id])
+  applicantId         Int
+  applicant           JobApplicant         @relation(fields: [applicantId], references: [id])
   offerTerms OfferTermOfJobOffer[]
 
   createdAt DateTime @default(now()) @map("created_at")
