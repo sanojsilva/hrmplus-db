@@ -78,7 +78,7 @@ model Employee {
   salutation                   String
   joinedDate                   DateTime @map("joined_date")
   employeeCode                 String   @map("employee_code")
-  qrCode                       String   @map("qr_code")
+  qrCode                       String?  @map("qr_code")
   emergencyPerson              String   @map("emergency_person")
   emergencyContact             String   @map("emergency_contact")
   emergencyContactRelationship String   @map("emergency_contact_relationship")
@@ -94,16 +94,16 @@ model Employee {
   workHistory         WorkHistory?
   internalWorkHistory InternalWorkHistory?
   salary              Salary?
-  gradeId             Int
-  grade               Grade                    @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId  Int
-  healthInsuarance    HealthInsuarance         @relation(fields: [healthInsuaranceId], references: [id])
+  gradeId             Int?
+  grade               Grade?                   @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId  Int?
+  healthInsuarance    HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
   designationId       Int
   designation         Designation              @relation(fields: [designationId], references: [id])
   departmentId        Int
   department          Department               @relation(fields: [departmentId], references: [id])
-  employmentTypeId    Int
-  employmentType      EmploymentType           @relation(fields: [employmentTypeId], references: [id])
+  employmentTypeId    Int?
+  employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
   jObApplicantId      Int?
   JobApplicant        JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
 
