@@ -215,6 +215,7 @@ model Designation {
   employee            Employee[]
   internalWork        InternalWorkHistory[]
   staffingPlanDetails StaffingPlanDetail[]
+  jobOffers           JobOffer[]
 
 
   @@map("designation")
@@ -410,31 +411,31 @@ model JobApplicant {
 }
 
 model JobOffer {
-  id          Int            @id @default(autoincrement())
-  status      JobOfferStatus
-  offerDate   DateTime       @map("offer_date")
-  description String         @db.VarChar(255)
-
-  applicantId Int
-  applicant   JobApplicant          @relation(fields: [applicantId], references: [id])
-  offerTerms  OfferTermOfJobOffer[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id            Int             @id @default(autoincrement())
+  status        JobOfferStatus
+  offerDate     DateTime        @map("offer_date")
+  description   String          @db.VarChar(255)
+  applicantId   Int
+  applicant     JobApplicant    @relation(fields: [applicantId], references: [id])
+  designationId Int
+  designation   Designation     @relation(fields: [designationId], references: [id])
+  offerTerms    JobOfferTerms[]
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
 
 
   @@map("job_offer")
 }
 
 model OfferTerm {
-  id        Int                   @id @default(autoincrement())
-  term      String                @db.VarChar(255)
-  jobOffers OfferTermOfJobOffer[]
+  id        Int             @id @default(autoincrement())
+  term      String          @db.VarChar(255)
+  jobOffers JobOfferTerms[]
 
   @@map("offer_term")
 }
 
-model OfferTermOfJobOffer {
+model JobOfferTerms {
   id          Int       @id @default(autoincrement())
   value       String    @db.VarChar(255)
   offerTermId Int       @map("offer_term_id")
