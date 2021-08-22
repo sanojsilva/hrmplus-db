@@ -518,13 +518,14 @@ model OnboardingActivity {
 
 // Holiday List
 model HolidayList {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(200)
-  fromDate  DateTime  @map("from_date")
-  toDate    DateTime  @map("to_date")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  holidays  Holiday[]
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(200)
+  fromDate    DateTime     @map("from_date")
+  toDate      DateTime     @map("to_date")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  holidays    Holiday[]
+  leavePeriod LeavePeriod?
 
   @@map("holiday_list")
 }
@@ -539,4 +540,16 @@ model Holiday {
   holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
 
   @@map("holiday")
+}
+
+model LeavePeriod {
+  id            Int         @id @default(autoincrement())
+  fromDate      DateTime    @map("from_date")
+  toDate        DateTime    @map("to_date")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("leave_period")
 }
