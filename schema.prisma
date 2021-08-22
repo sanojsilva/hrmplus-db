@@ -104,8 +104,8 @@ model Employee {
   department          Department               @relation(fields: [departmentId], references: [id])
   employmentTypeId    Int?
   employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
-  jObApplicantId      Int?
-  JobApplicant        JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
+  jobApplicantId      Int?
+  JobApplicant        JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
   onboarding          Onboarding?
   onboardingActivity  OnboardingActivity?
 
