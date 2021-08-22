@@ -106,6 +106,8 @@ model Employee {
   employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
   jObApplicantId      Int?
   JobApplicant        JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
+  onboarding          Onboarding?
+  onboardingActivity  OnboardingActivity?
 
 
   @@map("employee")
@@ -179,6 +181,7 @@ model Grade {
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
   employee  Employee[]
+
 
   @@map("grade")
 }
@@ -404,7 +407,8 @@ model JobApplicant {
   createdAt            DateTime            @default(now()) @map("created_at")
   updatedAt            DateTime            @updatedAt @map("updated_at")
   appointmentLetter    AppointmentLetter?
-  Employee             Employee[]
+  Employee             Employee?
+  onboarding           Onboarding?
 
 
   @@map("job_applicant")
@@ -477,4 +481,37 @@ model JobTerms {
   customTerms CustomTerms[]
 
   @@map("job_terms")
+}
+
+//lifecycle
+
+model Onboarding {
+  id                   Int                  @id @default(autoincrement())
+  joinedDate           DateTime             @map("joined_date")
+  assignedEmployee     String               @map("assignedEmployee")
+  status               OnboardingStatus
+  jobApplicantId       Int
+  jobApplicant         JobApplicant?        @relation(fields: [jobApplicantId], references: [id])
+  employeeId           Int?
+  employee             Employee?            @relation(fields: [employeeId], references: [id])
+  onboardingActivities OnboardingActivity[]
+
+  @@map("onboarding")
+}
+
+enum OnboardingStatus {
+  PENDING    @map("pending")
+  COMPLETED  @map("completed")
+}
+
+model OnboardingActivity {
+  id                 Int        @id @default(autoincrement())
+  activity           String
+  onboardingId       Int
+  onboarding         Onboarding @relation(fields: [onboardingId], references: [id])
+  assignedEmployeeId Int?
+  assignedEmployee   Employee?  @relation(fields: [assignedEmployeeId], references: [id])
+
+
+  @@map("onboarding_activity")
 }
