@@ -515,3 +515,28 @@ model OnboardingActivity {
 
   @@map("onboarding_activity")
 }
+
+// Holiday List
+model HolidayList {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(200)
+  fromDate  DateTime  @map("from_date")
+  toDate    DateTime  @map("to_date")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  holidays  Holiday[]
+
+  @@map("holiday_list")
+}
+
+model Holiday {
+  id            Int         @id @default(autoincrement())
+  date          DateTime    @map("date")
+  description   String      @db.VarChar(200)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("holiday")
+}
