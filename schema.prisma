@@ -575,22 +575,25 @@ model LeaveType {
 }
 
 model LeavePolicy {
-  id        Int      @id @default(autoincrement())
-  code      String   @db.VarChar(100)
-  year      Int
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                 Int                 @id @default(autoincrement())
+  code               String              @db.VarChar(100)
+  year               Int
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  leavePolicyDetails LeavePolicyDetail[]
 
   @@map("leave_policy")
 }
 
 model LeavePolicyDetail {
-  id              Int       @id @default(autoincrement())
+  id              Int         @id @default(autoincrement())
   annualAlocation Int
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
   leaveTypeId     Int
-  leaveType       LeaveType @relation(fields: [leaveTypeId], references: [id])
+  leaveType       LeaveType   @relation(fields: [leaveTypeId], references: [id])
+  leavePolicyId   Int
+  leavePolicy     LeavePolicy @relation(fields: [leavePolicyId], references: [id])
 
   @@map("leave_policy_detail")
 }
