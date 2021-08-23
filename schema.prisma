@@ -108,6 +108,7 @@ model Employee {
   JobApplicant        JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
   onboarding          Onboarding?
   onboardingActivity  OnboardingActivity?
+  promotion           Promotion[]
 
 
   @@map("employee")
@@ -514,4 +515,21 @@ model OnboardingActivity {
 
 
   @@map("onboarding_activity")
+}
+
+model Promotion {
+  id               Int                @id @default(autoincrement())
+  promotionDate    DateTime           @map("promotion_date")
+  employeeId       Int
+  employee         Employee           @relation(fields: [employeeId], references: [id])
+  promotionDetails PromotionDetails[]
+}
+
+model PromotionDetails {
+  id            Int       @id @default(autoincrement())
+  area          String
+  currentStatus String
+  newStatus     String
+  promotionId   Int
+  promotion     Promotion @relation(fields: [promotionId], references: [id])
 }
