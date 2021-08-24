@@ -104,8 +104,8 @@ model Employee {
   department          Department               @relation(fields: [departmentId], references: [id])
   employmentTypeId    Int?
   employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
-  jObApplicantId      Int?
-  JobApplicant        JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
+  jobApplicantId      Int?
+  JobApplicant        JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
   onboarding          Onboarding?
   onboardingActivity  OnboardingActivity?
   promotion           Promotion[]
@@ -527,9 +527,8 @@ model Promotion {
   employeeId       Int
   employee         Employee           @relation(fields: [employeeId], references: [id])
   promotionDetails PromotionDetails[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
 
   @@map("promotion")
 }
@@ -541,6 +540,7 @@ model PromotionDetails {
   newStatus     String    @map("new_status")
   promotionId   Int
   promotion     Promotion @relation(fields: [promotionId], references: [id])
+
 
   @@map("promotion_details")
 }
@@ -565,5 +565,88 @@ model TransferDetails {
   transferId    Int
   transfer      Transfer @relation(fields: [transferId], references: [id])
 
+
   @@map("transfer_details")
+}
+
+// Holiday List
+model HolidayList {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(200)
+  fromDate    DateTime     @map("from_date")
+  toDate      DateTime     @map("to_date")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  holidays    Holiday[]
+  leavePeriod LeavePeriod?
+
+  @@map("holiday_list")
+}
+
+model Holiday {
+  id            Int         @id @default(autoincrement())
+  date          DateTime    @map("date")
+  description   String      @db.VarChar(200)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("holiday")
+}
+
+model LeavePeriod {
+  id            Int         @id @default(autoincrement())
+  fromDate      DateTime    @map("from_date")
+  toDate        DateTime    @map("to_date")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("leave_period")
+}
+
+model LeaveType {
+  id                       Int      @id @default(autoincrement())
+  typeName                 String   @db.VarChar(100)
+  maxContinuousDays        Int      @default(0)
+  maxLeaves                Int      @default(0)
+  allowEncashment          Boolean  @default(false)
+  encashmentThreshholdDays Int      @default(0)
+  canCarryForward          Boolean  @default(false)
+  maxCarryForward          Int      @default(0)
+  withoutPay               Boolean  @default(false)
+  includeHoliday           Boolean  @default(false)
+  isCompensatory           Boolean  @default(false)
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  leavePolicyDetails LeavePolicyDetail[]
+
+  @@map("leave_type")
+}
+
+model LeavePolicy {
+  id                 Int                 @id @default(autoincrement())
+  code               String              @db.VarChar(100)
+  year               Int
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  leavePolicyDetails LeavePolicyDetail[]
+
+  @@map("leave_policy")
+}
+
+model LeavePolicyDetail {
+  id              Int         @id @default(autoincrement())
+  annualAlocation Int
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  leaveTypeId     Int
+  leaveType       LeaveType   @relation(fields: [leaveTypeId], references: [id])
+  leavePolicyId   Int
+  leavePolicy     LeavePolicy @relation(fields: [leavePolicyId], references: [id])
+
+  @@map("leave_policy_detail")
 }
