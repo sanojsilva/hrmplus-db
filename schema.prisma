@@ -109,6 +109,7 @@ model Employee {
   onboarding          Onboarding?
   onboardingActivity  OnboardingActivity?
   promotion           Promotion[]
+  transfer            Transfer[]
 
 
   @@map("employee")
@@ -497,6 +498,9 @@ model Onboarding {
   employee             Employee?            @relation(fields: [employeeId], references: [id])
   onboardingActivities OnboardingActivity[]
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("onboarding")
 }
 
@@ -523,13 +527,43 @@ model Promotion {
   employeeId       Int
   employee         Employee           @relation(fields: [employeeId], references: [id])
   promotionDetails PromotionDetails[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("promotion")
 }
 
 model PromotionDetails {
   id            Int       @id @default(autoincrement())
   area          String
-  currentStatus String
-  newStatus     String
+  currentStatus String    @map("current_status")
+  newStatus     String    @map("new_status")
   promotionId   Int
   promotion     Promotion @relation(fields: [promotionId], references: [id])
+
+  @@map("promotion_details")
+}
+
+model Transfer {
+  id              Int               @id @default(autoincrement())
+  transferDate    DateTime          @map("transfer_date")
+  employeeId      Int
+  employee        Employee          @relation(fields: [employeeId], references: [id])
+  transferDetails TransferDetails[]
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@map("transfer")
+}
+
+model TransferDetails {
+  id            Int      @id @default(autoincrement())
+  area          String
+  currentStatus String   @map("current_status")
+  newStatus     String   @map("new_status")
+  transferId    Int
+  transfer      Transfer @relation(fields: [transferId], references: [id])
+
+  @@map("transfer_details")
 }
