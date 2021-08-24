@@ -87,8 +87,7 @@ model Employee {
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
 
-  contactDetails EmpContactDetails?
-
+  contactDetails      EmpContactDetails?
   personalDetails     EmpPersonalDetails?
   eduQualifications   EducationQualifications?
   workHistory         WorkHistory?
@@ -108,8 +107,9 @@ model Employee {
   JobApplicant        JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
   onboarding          Onboarding?
   onboardingActivity  OnboardingActivity?
-  promotion           Promotion[]
 
+  promotion         Promotion[]
+  leaveApplications LeaveApplication[]
 
   @@map("employee")
 }
@@ -517,14 +517,13 @@ model OnboardingActivity {
   @@map("onboarding_activity")
 }
 
-
 model Promotion {
   id               Int                @id @default(autoincrement())
   promotionDate    DateTime           @map("promotion_date")
   employeeId       Int
   employee         Employee           @relation(fields: [employeeId], references: [id])
   promotionDetails PromotionDetails[]
-  
+
   @@map("promotion")
 }
 
@@ -535,7 +534,7 @@ model PromotionDetails {
   newStatus     String
   promotionId   Int
   promotion     Promotion @relation(fields: [promotionId], references: [id])
-  
+
   @@map("promotion_details")
 }
 
@@ -593,6 +592,7 @@ model LeaveType {
   updatedAt                DateTime @updatedAt @map("updated_at")
 
   leavePolicyDetails LeavePolicyDetail[]
+  leaveApplications  LeaveApplication[]
 
   @@map("leave_type")
 }
@@ -619,4 +619,34 @@ model LeavePolicyDetail {
   leavePolicy     LeavePolicy @relation(fields: [leavePolicyId], references: [id])
 
   @@map("leave_policy_detail")
+}
+
+model LeaveApplication {
+  id             Int      @id @default(autoincrement())
+  fromDate       DateTime @map("from_date")
+  toDate         DateTime @map("to_date")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  reason         String   @db.VarChar(255)
+  totalLeaveDays Decimal  @map("total_leave_days") @db.Decimal(18, 2)
+  status         String   @db.VarChar(40)
+
+  leaveTypeId Int
+  leaveType   LeaveType @relation(fields: [leaveTypeId], references: [id])
+  employeeId  Int
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+
+  leaveApplicationDetails LeaveApplicationDetail[]
+
+  @@map("leave_application")
+}
+
+model LeaveApplicationDetail {
+  id                 Int              @id @default(autoincrement())
+  halfOrFull         String           @db.VarChar(10)
+  leaveDate          DateTime         @map("leave_date")
+  leaveApplicationId Int
+  leaveApplication   LeaveApplication @relation(fields: [leaveApplicationId], references: [id])
+
+  @@map("leave_application_detail")
 }
