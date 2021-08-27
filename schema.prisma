@@ -108,9 +108,10 @@ model Employee {
   onboarding          Onboarding?
   onboardingActivity  OnboardingActivity?
 
-  ShiftRequest ShiftRequest[]
+  ShiftRequest      ShiftRequest[]
   promotion         Promotion[]
   leaveApplications LeaveApplication[]
+  ShiftAssignment   ShiftAssignment[]
 
   @@map("employee")
 }
@@ -624,16 +625,17 @@ model LeavePolicyDetail {
 }
 
 model ShiftType {
-  id                          Int           @id @default(autoincrement())
-  shiftName                   String        @db.VarChar(100)
-  startTime                   String        @db.VarChar(5)
-  endTime                     String        @db.VarChar(5)
+  id                          Int               @id @default(autoincrement())
+  shiftName                   String            @db.VarChar(100)
+  startTime                   String            @db.VarChar(5)
+  endTime                     String            @db.VarChar(5)
   determineCheckinAndCheckout Int
-  createdAt                   DateTime      @default(now()) @map("created_at")
-  updatedAt                   DateTime      @updatedAt @map("updated_at")
+  createdAt                   DateTime          @default(now()) @map("created_at")
+  updatedAt                   DateTime          @updatedAt @map("updated_at")
   holidayListId               Int
-  holidayList                 HolidayList   @relation(fields: [holidayListId], references: [id])
-  shiftRequest                ShiftRequest?
+  holidayList                 HolidayList       @relation(fields: [holidayListId], references: [id])
+  shiftRequest                ShiftRequest[]
+  shiftAssignment             ShiftAssignment[]
 
   @@map("shift_type")
 }
@@ -653,6 +655,23 @@ model ShiftRequest {
   employee   Employee @relation(fields: [employeeId], references: [id])
 
   @@map("shift_request")
+}
+
+model ShiftAssignment {
+  id        Int      @id @default(autoincrement())
+  approver  String   @db.VarChar(100)
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  shiftTypeId Int
+  shiftType   ShiftType @relation(fields: [shiftTypeId], references: [id])
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("shift_assignment")
 }
 
 model LeaveApplication {
