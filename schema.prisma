@@ -89,27 +89,30 @@ model Employee {
 
   contactDetails EmpContactDetails?
 
-  personalDetails     EmpPersonalDetails?
-  eduQualifications   EducationQualifications?
-  workHistory         WorkHistory?
-  internalWorkHistory InternalWorkHistory?
-  salary              Salary?
-  gradeId             Int?
-  grade               Grade?                   @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId  Int?
-  healthInsuarance    HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
-  designationId       Int
-  designation         Designation              @relation(fields: [designationId], references: [id])
-  departmentId        Int
-  department          Department               @relation(fields: [departmentId], references: [id])
-  employmentTypeId    Int?
-  employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
-  jobApplicantId      Int?
-  JobApplicant        JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
-  onboarding          Onboarding?
-  onboardingActivity  OnboardingActivity?
-  promotion           Promotion[]
-  transfer            Transfer[]
+  personalDetails      EmpPersonalDetails?
+  eduQualifications    EducationQualifications?
+  workHistory          WorkHistory?
+  internalWorkHistory  InternalWorkHistory?
+  salary               Salary?
+  gradeId              Int?
+  grade                Grade?                   @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId   Int?
+  healthInsuarance     HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
+  designationId        Int
+  designation          Designation              @relation(fields: [designationId], references: [id])
+  departmentId         Int
+  department           Department               @relation(fields: [departmentId], references: [id])
+  employmentTypeId     Int?
+  employmentType       EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
+  jObApplicantId       Int?
+  JobApplicant         JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
+  onboarding           Onboarding?
+  onboardingActivities OnboardingActivity[]
+  promotion            Promotion[]
+  transfer             Transfer[]
+  seperation           Seperation?
+  seperationActivities SeperationActivity[]
+  notification         Notification[]
 
 
   @@map("employee")
@@ -221,6 +224,8 @@ model Designation {
   internalWork        InternalWorkHistory[]
   staffingPlanDetails StaffingPlanDetail[]
   jobOffers           JobOffer[]
+  promotionCurrent    PromotionDetails[]    @relation("promotionCurrent")
+  promotionNew        PromotionDetails[]    @relation("promotionNew")
 
 
   @@map("designation")
@@ -262,12 +267,14 @@ model Salary {
 }
 
 model Department {
-  id            Int            @id @default(autoincrement())
-  name          String         @db.VarChar(255)
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
-  employees     Employee[]
-  staffingPlans StaffingPlan[]
+  id                Int               @id @default(autoincrement())
+  name              String            @db.VarChar(255)
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  employees         Employee[]
+  staffingPlans     StaffingPlan[]
+  departmentCurrent TransferDetails[] @relation("departmentCurrent")
+  departmentNew     TransferDetails[] @relation("departmentNew")
 }
 
 model EmploymentType {
@@ -413,6 +420,7 @@ model JobApplicant {
   onboarding           Onboarding?
 
 
+
   @@map("job_applicant")
 }
 
@@ -501,6 +509,7 @@ model Onboarding {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+
   @@map("onboarding")
 }
 
@@ -527,20 +536,22 @@ model Promotion {
   employeeId       Int
   employee         Employee           @relation(fields: [employeeId], references: [id])
   promotionDetails PromotionDetails[]
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("promotion")
 }
 
 model PromotionDetails {
-  id            Int       @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   area          String
-  currentStatus String    @map("current_status")
-  newStatus     String    @map("new_status")
+  currentStatus Int         @map("current_status")
+  currentId     Designation @relation(name: "promotionCurrent", fields: [currentStatus], references: [id])
+  newStatus     Int         @map("new_status")
+  newId         Designation @relation("promotionNew", fields: [newStatus], references: [id])
   promotionId   Int
-  promotion     Promotion @relation(fields: [promotionId], references: [id])
-
+  promotion     Promotion   @relation(fields: [promotionId], references: [id])
 
   @@map("promotion_details")
 }
@@ -558,95 +569,59 @@ model Transfer {
 }
 
 model TransferDetails {
-  id            Int      @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   area          String
-  currentStatus String   @map("current_status")
-  newStatus     String   @map("new_status")
-  transferId    Int
-  transfer      Transfer @relation(fields: [transferId], references: [id])
+  currentStatus Int        @map("current_status")
+  currentId     Department @relation(name: "departmentCurrent", fields: [currentStatus], references: [id])
+  newStatus     Int        @map("new_status")
+  newId         Department @relation("departmentNew", fields: [newStatus], references: [id])
 
+  transferId Int
+  transfer   Transfer @relation(fields: [transferId], references: [id])
 
   @@map("transfer_details")
 }
 
-// Holiday List
-model HolidayList {
-  id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(200)
-  fromDate    DateTime     @map("from_date")
-  toDate      DateTime     @map("to_date")
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  holidays    Holiday[]
-  leavePeriod LeavePeriod?
+model Seperation {
+  id                   Int                  @id @default(autoincrement())
+  seperationDate       DateTime             @map("seperation_date")
+  assignedEmployee     String               @map("assigned_employee")
+  status               SeperationStatus
+  employeeId           Int
+  employee             Employee             @relation(fields: [employeeId], references: [id])
+  seperationActivities SeperationActivity[]
 
-  @@map("holiday_list")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("seperation")
 }
 
-model Holiday {
-  id            Int         @id @default(autoincrement())
-  date          DateTime    @map("date")
-  description   String      @db.VarChar(200)
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  holidayListId Int
-  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
-
-  @@map("holiday")
+enum SeperationStatus {
+  PENDING    @map("pending")
+  COMPLETED  @map("completed")
 }
 
-model LeavePeriod {
-  id            Int         @id @default(autoincrement())
-  fromDate      DateTime    @map("from_date")
-  toDate        DateTime    @map("to_date")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  holidayListId Int
-  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+model SeperationActivity {
+  id                 Int        @id @default(autoincrement())
+  activity           String
+  seperationId       Int
+  Seperation         Seperation @relation(fields: [seperationId], references: [id])
+  assignedEmployeeId Int?
+  assignedEmployee   Employee?  @relation(fields: [assignedEmployeeId], references: [id])
 
-  @@map("leave_period")
+  @@map("separation_activity")
 }
 
-model LeaveType {
-  id                       Int      @id @default(autoincrement())
-  typeName                 String   @db.VarChar(100)
-  maxContinuousDays        Int      @default(0)
-  maxLeaves                Int      @default(0)
-  allowEncashment          Boolean  @default(false)
-  encashmentThreshholdDays Int      @default(0)
-  canCarryForward          Boolean  @default(false)
-  maxCarryForward          Int      @default(0)
-  withoutPay               Boolean  @default(false)
-  includeHoliday           Boolean  @default(false)
-  isCompensatory           Boolean  @default(false)
-  createdAt                DateTime @default(now()) @map("created_at")
-  updatedAt                DateTime @updatedAt @map("updated_at")
+model Notification {
+  id                 Int      @id @default(autoincrement())
+  message            String
+  link               String?
+  read               Boolean
+  recievedEmployeeId Int      @map("recieved_employee_id")
+  recievedEmployee   Employee @relation(fields: [recievedEmployeeId], references: [id])
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
 
-  leavePolicyDetails LeavePolicyDetail[]
-
-  @@map("leave_type")
-}
-
-model LeavePolicy {
-  id                 Int                 @id @default(autoincrement())
-  code               String              @db.VarChar(100)
-  year               Int
-  createdAt          DateTime            @default(now()) @map("created_at")
-  updatedAt          DateTime            @updatedAt @map("updated_at")
-  leavePolicyDetails LeavePolicyDetail[]
-
-  @@map("leave_policy")
-}
-
-model LeavePolicyDetail {
-  id              Int         @id @default(autoincrement())
-  annualAlocation Int
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
-  leaveTypeId     Int
-  leaveType       LeaveType   @relation(fields: [leaveTypeId], references: [id])
-  leavePolicyId   Int
-  leavePolicy     LeavePolicy @relation(fields: [leavePolicyId], references: [id])
-
-  @@map("leave_policy_detail")
+  @@map("notification")
 }
