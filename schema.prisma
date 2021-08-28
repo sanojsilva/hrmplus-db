@@ -554,6 +554,7 @@ model HolidayList {
   holidays          Holiday[]
   leavePeriod       LeavePeriod?
   shiftType         ShiftType?
+  company           Company?
 
   @@map("holiday_list")
 }
@@ -705,4 +706,20 @@ model LeaveApplicationDetail {
   leaveApplication   LeaveApplication @relation(fields: [leaveApplicationId], references: [id])
 
   @@map("leave_application_detail")
+}
+
+model Company {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  name           String   @db.VarChar(255)
+  logoImage      String   @db.VarChar(255)
+  address        String   @db.VarChar(255)
+  contactNumbers String   @db.VarChar(255)
+  emails         String   @db.VarChar(255)
+
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("company")
 }
