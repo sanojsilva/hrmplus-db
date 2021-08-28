@@ -542,15 +542,17 @@ model PromotionDetails {
 
 // Holiday List
 model HolidayList {
-  id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(200)
-  fromDate    DateTime     @map("from_date")
-  toDate      DateTime     @map("to_date")
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  holidays    Holiday[]
-  leavePeriod LeavePeriod?
-  shiftType   ShiftType?
+  id                Int          @id @default(autoincrement())
+  name              String       @db.VarChar(200)
+  fromDate          DateTime     @map("from_date")
+  toDate            DateTime     @map("to_date")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  isSaturdayHoliday Boolean      @default(false)
+  isSundayHoliday   Boolean      @default(false)
+  holidays          Holiday[]
+  leavePeriod       LeavePeriod?
+  shiftType         ShiftType?
 
   @@map("holiday_list")
 }
