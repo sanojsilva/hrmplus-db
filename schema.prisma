@@ -550,6 +550,7 @@ model HolidayList {
   updatedAt         DateTime     @updatedAt @map("updated_at")
   isSaturdayHoliday Boolean      @default(false)
   isSundayHoliday   Boolean      @default(false)
+  totalHolidays     Int          @default(0)
   holidays          Holiday[]
   leavePeriod       LeavePeriod?
   shiftType         ShiftType?
