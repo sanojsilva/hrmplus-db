@@ -112,6 +112,9 @@ model Employee {
   promotion         Promotion[]
   leaveApplications LeaveApplication[]
   ShiftAssignment   ShiftAssignment[]
+  Attendance      Attendance[]
+  AttendanceRequest  AttendanceRequest[]
+
 
   @@map("employee")
 }
@@ -722,4 +725,54 @@ model Company {
   holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
 
   @@map("company")
+}
+
+model Attendance {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  date           DateTime
+  inTime         DateTime @map("in_time")
+  outTime        DateTime @map("out_time")
+  workingHours   Decimal @map("working_hours")
+  lateEntry      Boolean  @default(false)
+  earlyExit      Boolean  @default(false)
+  status         String   @db.VarChar(255)
+
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("attendance")
+}
+
+model AttendanceRequest {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  toDate         DateTime @map("to_date")
+  fromDate       DateTime @map("from_date")
+  reason         String   @db.VarChar(255)
+  explanation    String   @db.VarChar(255)
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  
+  AttendanceRequsetDetails  AttendanceRequestDetails[]
+
+  @@map("attendance_request")
+}
+
+model AttendanceRequestDetails {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  date           DateTime 
+  halfOrFull     String           @db.VarChar(10)
+ 
+
+  attendanceRequestId Int
+  AttendanceRequest   AttendanceRequest @relation(fields: [attendanceRequestId], references: [id])
+
+  @@map("attendance_request_details")
 }
