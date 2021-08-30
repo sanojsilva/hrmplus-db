@@ -86,33 +86,37 @@ model Employee {
   createdAt                    DateTime @default(now()) @map("created_at")
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
-
-  contactDetails EmpContactDetails?
-
-  personalDetails      EmpPersonalDetails?
-  eduQualifications    EducationQualifications?
-  workHistory          WorkHistory?
-  internalWorkHistory  InternalWorkHistory?
-  salary               Salary?
-  gradeId              Int?
-  grade                Grade?                   @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId   Int?
-  healthInsuarance     HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
-  designationId        Int
-  designation          Designation              @relation(fields: [designationId], references: [id])
-  departmentId         Int
-  department           Department               @relation(fields: [departmentId], references: [id])
-  employmentTypeId     Int?
-  employmentType       EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
-  jObApplicantId       Int?
-  JobApplicant         JobApplicant?            @relation(fields: [jObApplicantId], references: [id])
-  onboarding           Onboarding?
-  onboardingActivities OnboardingActivity[]
-  promotion            Promotion[]
+  contactDetails      EmpContactDetails?
+  personalDetails     EmpPersonalDetails?
+  eduQualifications   EducationQualifications?
+  workHistory         WorkHistory?
+  internalWorkHistory InternalWorkHistory?
+  salary              Salary?
+  gradeId             Int?
+  grade               Grade?                   @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId  Int?
+  healthInsuarance    HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
+  designationId       Int
+  designation         Designation              @relation(fields: [designationId], references: [id])
+  departmentId        Int
+  department          Department               @relation(fields: [departmentId], references: [id])
+  employmentTypeId    Int?
+  employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
+  jobApplicantId      Int?
+  JobApplicant        JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
+  onboarding          Onboarding?
+  onboardingActivity  OnboardingActivity?
   transfer             Transfer[]
   seperation           Seperation?
   seperationActivities SeperationActivity[]
   notification         Notification[]
+  ShiftRequest      ShiftRequest[]
+  promotion         Promotion[]
+  leaveApplications LeaveApplication[]
+  ShiftAssignment   ShiftAssignment[]
+  Attendance      Attendance[]
+  AttendanceRequest  AttendanceRequest[]
+
 
 
   @@map("employee")
@@ -536,7 +540,6 @@ model Promotion {
   employeeId       Int
   employee         Employee           @relation(fields: [employeeId], references: [id])
   promotionDetails PromotionDetails[]
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -551,7 +554,7 @@ model PromotionDetails {
   newStatus     Int         @map("new_status")
   newId         Designation @relation("promotionNew", fields: [newStatus], references: [id])
   promotionId   Int
-  promotion     Promotion   @relation(fields: [promotionId], references: [id])
+  promotion     Promotion @relation(fields: [promotionId], references: [id])
 
   @@map("promotion_details")
 }
@@ -564,8 +567,27 @@ model Transfer {
   transferDetails TransferDetails[]
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
-
+  
   @@map("transfer")
+}
+
+// Holiday List
+model HolidayList {
+  id                Int          @id @default(autoincrement())
+  name              String       @db.VarChar(200)
+  fromDate          DateTime     @map("from_date")
+  toDate            DateTime     @map("to_date")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  isSaturdayHoliday Boolean      @default(false)
+  isSundayHoliday   Boolean      @default(false)
+  totalHolidays     Int          @default(0)
+  holidays          Holiday[]
+  leavePeriod       LeavePeriod?
+  shiftType         ShiftType?
+  company           Company?
+
+  
 }
 
 model TransferDetails {
@@ -624,4 +646,208 @@ model Notification {
   updatedAt          DateTime @updatedAt @map("updated_at")
 
   @@map("notification")
+}
+
+model LeavePeriod {
+  id            Int         @id @default(autoincrement())
+  fromDate      DateTime    @map("from_date")
+  toDate        DateTime    @map("to_date")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("leave_period")
+}
+
+model LeaveType {
+  id                       Int      @id @default(autoincrement())
+  typeName                 String   @db.VarChar(100)
+  maxContinuousDays        Int      @default(0)
+  maxLeaves                Int      @default(0)
+  allowEncashment          Boolean  @default(false)
+  encashmentThreshholdDays Int      @default(0)
+  canCarryForward          Boolean  @default(false)
+  maxCarryForward          Int      @default(0)
+  withoutPay               Boolean  @default(false)
+  includeHoliday           Boolean  @default(false)
+  isCompensatory           Boolean  @default(false)
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  leavePolicyDetails LeavePolicyDetail[]
+  leaveApplications  LeaveApplication[]
+
+  @@map("leave_type")
+}
+
+model LeavePolicy {
+  id                 Int                 @id @default(autoincrement())
+  code               String              @db.VarChar(100)
+  year               Int
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  leavePolicyDetails LeavePolicyDetail[]
+
+  @@map("leave_policy")
+}
+
+model LeavePolicyDetail {
+  id              Int         @id @default(autoincrement())
+  annualAlocation Int
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  leaveTypeId     Int
+  leaveType       LeaveType   @relation(fields: [leaveTypeId], references: [id])
+  leavePolicyId   Int
+  leavePolicy     LeavePolicy @relation(fields: [leavePolicyId], references: [id])
+
+  @@map("leave_policy_detail")
+
+}
+
+model ShiftType {
+  id                          Int               @id @default(autoincrement())
+  shiftName                   String            @db.VarChar(100)
+  startTime                   String            @db.VarChar(5)
+  endTime                     String            @db.VarChar(5)
+  determineCheckinAndCheckout Int
+  createdAt                   DateTime          @default(now()) @map("created_at")
+  updatedAt                   DateTime          @updatedAt @map("updated_at")
+  holidayListId               Int
+  holidayList                 HolidayList       @relation(fields: [holidayListId], references: [id])
+  shiftRequest                ShiftRequest[]
+  shiftAssignment             ShiftAssignment[]
+
+  @@map("shift_type")
+}
+
+model ShiftRequest {
+  id        Int      @id @default(autoincrement())
+  approver  String   @db.VarChar(100)
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  shiftTypeId Int
+  shiftType   ShiftType @relation(fields: [shiftTypeId], references: [id])
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("shift_request")
+}
+
+model ShiftAssignment {
+  id        Int      @id @default(autoincrement())
+  approver  String   @db.VarChar(100)
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  shiftTypeId Int
+  shiftType   ShiftType @relation(fields: [shiftTypeId], references: [id])
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("shift_assignment")
+}
+
+model LeaveApplication {
+  id             Int      @id @default(autoincrement())
+  fromDate       DateTime @map("from_date")
+  toDate         DateTime @map("to_date")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  reason         String   @db.VarChar(255)
+  totalLeaveDays Decimal  @map("total_leave_days") @db.Decimal(18, 2)
+  status         String   @db.VarChar(40)
+
+  leaveTypeId Int
+  leaveType   LeaveType @relation(fields: [leaveTypeId], references: [id])
+  employeeId  Int
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+
+  leaveApplicationDetails LeaveApplicationDetail[]
+
+  @@map("leave_application")
+}
+
+model LeaveApplicationDetail {
+  id                 Int              @id @default(autoincrement())
+  halfOrFull         String           @db.VarChar(10)
+  leaveDate          DateTime         @map("leave_date")
+  leaveApplicationId Int
+  leaveApplication   LeaveApplication @relation(fields: [leaveApplicationId], references: [id])
+
+  @@map("leave_application_detail")
+}
+
+model Company {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  name           String   @db.VarChar(255)
+  logoImage      String   @db.VarChar(255)
+  address        String   @db.VarChar(255)
+  contactNumbers String   @db.VarChar(255)
+  emails         String   @db.VarChar(255)
+
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("company")
+}
+
+model Attendance {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  date           DateTime
+  inTime         DateTime @map("in_time")
+  outTime        DateTime @map("out_time")
+  workingHours   Decimal @map("working_hours")
+  lateEntry      Boolean  @default(false)
+  earlyExit      Boolean  @default(false)
+  status         String   @db.VarChar(255)
+
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("attendance")
+}
+
+model AttendanceRequest {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  toDate         DateTime @map("to_date")
+  fromDate       DateTime @map("from_date")
+  reason         String   @db.VarChar(255)
+  explanation    String   @db.VarChar(255)
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  
+  AttendanceRequsetDetails  AttendanceRequestDetails[]
+
+  @@map("attendance_request")
+}
+
+model AttendanceRequestDetails {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  date           DateTime 
+  halfOrFull     String           @db.VarChar(10)
+ 
+
+  attendanceRequestId Int
+  AttendanceRequest   AttendanceRequest @relation(fields: [attendanceRequestId], references: [id])
+
+  @@map("attendance_request_details")
 }
