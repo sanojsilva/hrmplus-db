@@ -673,24 +673,34 @@ model LeavePeriod {
 }
 
 model LeaveType {
-  id                       Int      @id @default(autoincrement())
-  typeName                 String   @db.VarChar(100)
-  maxContinuousDays        Int      @default(0)
-  maxLeaves                Int      @default(0)
-  allowEncashment          Boolean  @default(false)
-  encashmentThreshholdDays Int      @default(0)
-  canCarryForward          Boolean  @default(false)
-  maxCarryForward          Int      @default(0)
-  withoutPay               Boolean  @default(false)
-  includeHoliday           Boolean  @default(false)
-  isCompensatory           Boolean  @default(false)
-  createdAt                DateTime @default(now()) @map("created_at")
-  updatedAt                DateTime @updatedAt @map("updated_at")
+  id                       Int             @id @default(autoincrement())
+  typeName                 String          @db.VarChar(100)
+  maxContinuousDays        Int             @default(0)
+  maxLeaves                Int             @default(0)
+  applicableAfter          Int             @default(0)
+  allowEncashment          Boolean         @default(false)
+  encashmentThreshholdDays Int             @default(0)
+  canCarryForward          Boolean         @default(false)
+  maxCarryForward          Int             @default(0)
+  withoutPay               Boolean         @default(false)
+  includeHoliday           Boolean         @default(false)
+  isCompensatory           Boolean         @default(false)
+  isEarnedLeave            Boolean         @default(false)
+  earnedLeaveFreq          EarnedLeaveFreq
+  createdAt                DateTime        @default(now()) @map("created_at")
+  updatedAt                DateTime        @updatedAt @map("updated_at")
 
   leavePolicyDetails LeavePolicyDetail[]
   leaveApplications  LeaveApplication[]
 
   @@map("leave_type")
+}
+
+enum EarnedLeaveFreq {
+  MONTHLY  @map("monthly")
+  YEARLY   @map("yearly")
+
+  @@map("earned_leave_frequency")
 }
 
 model LeavePolicy {
