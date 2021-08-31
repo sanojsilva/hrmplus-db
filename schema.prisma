@@ -86,36 +86,36 @@ model Employee {
   createdAt                    DateTime @default(now()) @map("created_at")
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
-  contactDetails      EmpContactDetails?
-  personalDetails     EmpPersonalDetails?
-  eduQualifications   EducationQualifications?
-  workHistory         WorkHistory?
-  internalWorkHistory InternalWorkHistory?
-  salary              Salary?
-  gradeId             Int?
-  grade               Grade?                   @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId  Int?
-  healthInsuarance    HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
-  designationId       Int
-  designation         Designation              @relation(fields: [designationId], references: [id])
-  departmentId        Int
-  department          Department               @relation(fields: [departmentId], references: [id])
-  employmentTypeId    Int?
-  employmentType      EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
-  jobApplicantId      Int?
-  JobApplicant        JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
-  onboarding          Onboarding?
-  onboardingActivity  OnboardingActivity?
+  contactDetails       EmpContactDetails?
+  personalDetails      EmpPersonalDetails?
+  eduQualifications    EducationQualifications?
+  workHistory          WorkHistory?
+  internalWorkHistory  InternalWorkHistory?
+  salary               Salary?
+  gradeId              Int?
+  grade                Grade?                   @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId   Int?
+  healthInsuarance     HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
+  designationId        Int
+  designation          Designation              @relation(fields: [designationId], references: [id])
+  departmentId         Int
+  department           Department               @relation(fields: [departmentId], references: [id])
+  employmentTypeId     Int?
+  employmentType       EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
+  jobApplicantId       Int?
+  JobApplicant         JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
+  onboarding           Onboarding?
+  onboardingActivity   OnboardingActivity?
   transfer             Transfer[]
   seperation           Seperation?
   seperationActivities SeperationActivity[]
   notification         Notification[]
-  ShiftRequest      ShiftRequest[]
-  promotion         Promotion[]
-  leaveApplications LeaveApplication[]
-  ShiftAssignment   ShiftAssignment[]
-  Attendance      Attendance[]
-  AttendanceRequest  AttendanceRequest[]
+  ShiftRequest         ShiftRequest[]
+  promotion            Promotion[]
+  leaveApplications    LeaveApplication[]
+  ShiftAssignment      ShiftAssignment[]
+  Attendance           Attendance[]
+  AttendanceRequest    AttendanceRequest[]
 
 
 
@@ -540,8 +540,8 @@ model Promotion {
   employeeId       Int
   employee         Employee           @relation(fields: [employeeId], references: [id])
   promotionDetails PromotionDetails[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
 
   @@map("promotion")
 }
@@ -554,7 +554,7 @@ model PromotionDetails {
   newStatus     Int         @map("new_status")
   newId         Designation @relation("promotionNew", fields: [newStatus], references: [id])
   promotionId   Int
-  promotion     Promotion @relation(fields: [promotionId], references: [id])
+  promotion     Promotion   @relation(fields: [promotionId], references: [id])
 
   @@map("promotion_details")
 }
@@ -567,7 +567,7 @@ model Transfer {
   transferDetails TransferDetails[]
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
-  
+
   @@map("transfer")
 }
 
@@ -587,7 +587,19 @@ model HolidayList {
   shiftType         ShiftType?
   company           Company?
 
-  
+  @@map("holiday_list")
+}
+
+model Holiday {
+  id            Int         @id @default(autoincrement())
+  date          DateTime    @map("date")
+  description   String      @db.VarChar(200)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  holidayListId Int
+  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+
+  @@map("holiday")
 }
 
 model TransferDetails {
@@ -702,8 +714,8 @@ model LeavePolicyDetail {
   leavePolicyId   Int
   leavePolicy     LeavePolicy @relation(fields: [leavePolicyId], references: [id])
 
-  @@map("leave_policy_detail")
 
+  @@map("leave_policy_detail")
 }
 
 model ShiftType {
@@ -803,16 +815,16 @@ model Company {
 }
 
 model Attendance {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  date           DateTime
-  inTime         DateTime @map("in_time")
-  outTime        DateTime @map("out_time")
-  workingHours   Decimal @map("working_hours")
-  lateEntry      Boolean  @default(false)
-  earlyExit      Boolean  @default(false)
-  status         String   @db.VarChar(255)
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  date         DateTime
+  inTime       DateTime @map("in_time")
+  outTime      DateTime @map("out_time")
+  workingHours Decimal  @map("working_hours")
+  lateEntry    Boolean  @default(false)
+  earlyExit    Boolean  @default(false)
+  status       String   @db.VarChar(255)
 
 
   employeeId Int
@@ -822,29 +834,29 @@ model Attendance {
 }
 
 model AttendanceRequest {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  toDate         DateTime @map("to_date")
-  fromDate       DateTime @map("from_date")
-  reason         String   @db.VarChar(255)
-  explanation    String   @db.VarChar(255)
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  toDate      DateTime @map("to_date")
+  fromDate    DateTime @map("from_date")
+  reason      String   @db.VarChar(255)
+  explanation String   @db.VarChar(255)
 
   employeeId Int
   employee   Employee @relation(fields: [employeeId], references: [id])
-  
-  AttendanceRequsetDetails  AttendanceRequestDetails[]
+
+  AttendanceRequsetDetails AttendanceRequestDetails[]
 
   @@map("attendance_request")
 }
 
 model AttendanceRequestDetails {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  date           DateTime 
-  halfOrFull     String           @db.VarChar(10)
- 
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  date       DateTime
+  halfOrFull String   @db.VarChar(10)
+
 
   attendanceRequestId Int
   AttendanceRequest   AttendanceRequest @relation(fields: [attendanceRequestId], references: [id])
