@@ -110,6 +110,7 @@ model Employee {
   seperation           Seperation?
   seperationActivities SeperationActivity[]
   notification         Notification[]
+  skillMap             SkillMap[]
   ShiftRequest         ShiftRequest[]
   promotion            Promotion[]
   leaveApplications    LeaveApplication[]
@@ -236,12 +237,12 @@ model Designation {
 }
 
 model SkillsOfDesignation {
-  id            Int         @id @default(autoincrement())
-  skillId       Int         @map("skill_id")
-  skill         Skills      @relation(fields: [skillId], references: [id])
-  designationId Int         @map("designation_id")
-  designation   Designation @relation(fields: [designationId], references: [id])
-
+  id            Int            @id @default(autoincrement())
+  skillId       Int            @map("skill_id")
+  skill         Skills         @relation(fields: [skillId], references: [id])
+  designationId Int            @map("designation_id")
+  designation   Designation    @relation(fields: [designationId], references: [id])
+  skillDetails  SkillDetails[]
 
   @@map("skills_of_designation")
 }
@@ -658,6 +659,46 @@ model Notification {
   updatedAt          DateTime @updatedAt @map("updated_at")
 
   @@map("notification")
+}
+
+model SkillMap {
+  id Int @id @default(autoincrement())
+
+
+  employeeId      Int
+  employee        Employee          @relation(fields: [employeeId], references: [id])
+  skillDetails    SkillDetails[]
+  trainingDetails TrainingDetails[]
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+}
+
+model SkillDetails {
+  id             Int                 @id @default(autoincrement())
+  skillId        Int
+  skill          SkillsOfDesignation @relation(fields: [skillId], references: [id])
+  rating         Int
+  skillMapId     Int
+  skillDetails   SkillMap            @relation(fields: [skillMapId], references: [id])
+  evaluationDate DateTime            @default(now()) @map("evaluation_date")
+}
+
+model TrainingDetails {
+  id              Int           @id @default(autoincrement())
+  skillMapId      Int
+  skillDetails    SkillMap      @relation(fields: [skillMapId], references: [id])
+  trainingEventId Int
+  trainngEvent    TrainingEvent @relation(fields: [trainingEventId], references: [id])
+}
+
+model TrainingEvent {
+  id              Int               @id @default(autoincrement())
+  name            String
+  startTime       DateTime
+  endTime         DateTime
+  trainerName     String
+  location        String
+  trainingDetails TrainingDetails[]
 }
 
 model LeavePeriod {
