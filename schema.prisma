@@ -661,13 +661,13 @@ model Notification {
 }
 
 model LeavePeriod {
-  id            Int         @id @default(autoincrement())
-  fromDate      DateTime    @map("from_date")
-  toDate        DateTime    @map("to_date")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  holidayListId Int
-  holidayList   HolidayList @relation(fields: [holidayListId], references: [id])
+  id            Int          @id @default(autoincrement())
+  fromDate      DateTime     @map("from_date")
+  toDate        DateTime     @map("to_date")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  holidayListId Int?
+  holidayList   HolidayList? @relation(fields: [holidayListId], references: [id])
 
   @@map("leave_period")
 }
