@@ -747,7 +747,6 @@ enum EarnedLeaveFreq {
 model LeavePolicy {
   id                 Int                 @id @default(autoincrement())
   code               String              @db.VarChar(100)
-  year               Int
   createdAt          DateTime            @default(now()) @map("created_at")
   updatedAt          DateTime            @updatedAt @map("updated_at")
   leavePolicyDetails LeavePolicyDetail[]
