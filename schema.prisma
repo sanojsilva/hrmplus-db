@@ -86,39 +86,39 @@ model Employee {
   createdAt                    DateTime @default(now()) @map("created_at")
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
-  contactDetails       EmpContactDetails?
-  personalDetails      EmpPersonalDetails?
-  eduQualifications    EducationQualifications?
-  workHistory          WorkHistory?
-  internalWorkHistory  InternalWorkHistory?
-  salary               Salary?
-  gradeId              Int?
-  grade                Grade?                   @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId   Int?
-  healthInsuarance     HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
-  designationId        Int
-  designation          Designation              @relation(fields: [designationId], references: [id])
-  departmentId         Int
-  department           Department               @relation(fields: [departmentId], references: [id])
-  employmentTypeId     Int?
-  employmentType       EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
-  jobApplicantId       Int?
-  JobApplicant         JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
-  onboarding           Onboarding?
-  onboardingActivity   OnboardingActivity?
-  transfer             Transfer[]
-  seperation           Seperation?
-  seperationActivities SeperationActivity[]
-  notification         Notification[]
-  skillMap             SkillMap[]
-  ShiftRequest         ShiftRequest[]
-  promotion            Promotion[]
-  leaveApplications    LeaveApplication[]
-  ShiftAssignment      ShiftAssignment[]
-  Attendance           Attendance[]
-  AttendanceRequest    AttendanceRequest[]
-
-
+  contactDetails         EmpContactDetails?
+  personalDetails        EmpPersonalDetails?
+  eduQualifications      EducationQualifications?
+  workHistory            WorkHistory?
+  internalWorkHistory    InternalWorkHistory?
+  salary                 Salary?
+  gradeId                Int?
+  grade                  Grade?                   @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId     Int?
+  healthInsuarance       HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
+  designationId          Int
+  designation            Designation              @relation(fields: [designationId], references: [id])
+  departmentId           Int
+  department             Department               @relation(fields: [departmentId], references: [id])
+  employmentTypeId       Int?
+  employmentType         EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
+  jobApplicantId         Int?
+  JobApplicant           JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
+  onboarding             Onboarding?
+  onboardingActivity     OnboardingActivity?
+  transfer               Transfer[]
+  seperation             Seperation?
+  seperationActivities   SeperationActivity[]
+  notification           Notification[]
+  skillMap               SkillMap[]
+  ShiftRequest           ShiftRequest[]
+  promotion              Promotion[]
+  leaveApplications      LeaveApplication[]
+  ShiftAssignment        ShiftAssignment[]
+  Attendance             Attendance[]
+  AttendanceRequest      AttendanceRequest[]
+  leavePolicyAssignments LeavePolicyAssignment[]
+  leaveAlocations        LeaveAlocation[]
 
   @@map("employee")
 }
@@ -710,6 +710,8 @@ model LeavePeriod {
   holidayListId Int?
   holidayList   HolidayList? @relation(fields: [holidayListId], references: [id])
 
+  LeavePolicyAssignments LeavePolicyAssignment[]
+
   @@map("leave_period")
 }
 
@@ -733,6 +735,7 @@ model LeaveType {
 
   leavePolicyDetails LeavePolicyDetail[]
   leaveApplications  LeaveApplication[]
+  leaveAlocations    LeaveAlocation[]
 
   @@map("leave_type")
 }
@@ -745,11 +748,12 @@ enum EarnedLeaveFreq {
 }
 
 model LeavePolicy {
-  id                 Int                 @id @default(autoincrement())
-  code               String              @db.VarChar(100)
-  createdAt          DateTime            @default(now()) @map("created_at")
-  updatedAt          DateTime            @updatedAt @map("updated_at")
-  leavePolicyDetails LeavePolicyDetail[]
+  id                     Int                     @id @default(autoincrement())
+  code                   String                  @db.VarChar(100)
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+  leavePolicyDetails     LeavePolicyDetail[]
+  LeavePolicyAssignments LeavePolicyAssignment[]
 
   @@map("leave_policy")
 }
@@ -912,4 +916,42 @@ model AttendanceRequestDetails {
   AttendanceRequest   AttendanceRequest @relation(fields: [attendanceRequestId], references: [id])
 
   @@map("attendance_request_details")
+}
+
+model LeavePolicyAssignment {
+  id        Int      @id @default(autoincrement())
+  code      String   @db.VarChar(100)
+  addUnused Boolean  @default(false) @map("add_unused")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  employeeId    Int         @map("employee_id")
+  employee      Employee    @relation(fields: [employeeId], references: [id])
+  leavePolicyId Int         @map("leave_policy_id")
+  leavePolicy   LeavePolicy @relation(fields: [leavePolicyId], references: [id])
+  leavePeriodId Int         @map("leave_period_id")
+  leavePeriod   LeavePeriod @relation(fields: [leavePeriodId], references: [id])
+
+  leaveAlocations LeaveAlocation[]
+
+  @@map("leave_policy_assignment")
+}
+
+model LeaveAlocation {
+  id        Int      @id @default(autoincrement())
+  code      String   @db.VarChar(100)
+  addUnused Boolean  @default(false) @map("add_unused")
+  fromDate  DateTime @map("from_date")
+  toDate    DateTime @map("to_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  employeeId              Int                    @map("employee_id")
+  employee                Employee               @relation(fields: [employeeId], references: [id])
+  leaveTypeId             Int                    @map("leave_type_id")
+  leaveType               LeaveType              @relation(fields: [leaveTypeId], references: [id])
+  leavePolicyAssignmentId Int?                   @map("leave_policy_assignment_id")
+  leavePolicyAssignment   LeavePolicyAssignment? @relation(fields: [leavePolicyAssignmentId], references: [id])
+
+  @@map("leave_alocation")
 }
