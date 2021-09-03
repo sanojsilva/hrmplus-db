@@ -939,13 +939,15 @@ model LeavePolicyAssignment {
 }
 
 model LeaveAlocation {
-  id        Int      @id @default(autoincrement())
-  code      String   @db.VarChar(100)
-  addUnused Boolean  @default(false) @map("add_unused")
-  fromDate  DateTime @map("from_date")
-  toDate    DateTime @map("to_date")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                  Int      @id @default(autoincrement())
+  code                String   @db.VarChar(100)
+  addUnused           Boolean  @default(false) @map("add_unused")
+  fromDate            DateTime @map("from_date")
+  toDate              DateTime @map("to_date")
+  newLeavesAlocated   Decimal  @default(0) @map("new_leaves_alocated") @db.Decimal(18, 2)
+  totalLeavesAlocated Decimal  @default(0) @map("total_leaves_alocated") @db.Decimal(18, 2)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
 
   employeeId              Int                    @map("employee_id")
   employee                Employee               @relation(fields: [employeeId], references: [id])
