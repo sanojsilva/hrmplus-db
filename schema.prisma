@@ -28,13 +28,14 @@ model User {
 }
 
 model Permission {
-  id        Int               @id @default(autoincrement())
-  name      String            @db.VarChar(255)
-  route     String            @db.VarChar(100)
-  module    String            @db.VarChar(100)
-  createdAt DateTime          @default(now()) @map("created_at")
-  updatedAt DateTime          @updatedAt @map("updated_at")
-  roles     RolePermissions[]
+  id            Int               @id @default(autoincrement())
+  name          String            @db.VarChar(255)
+  frontendRoute String            @map("frontend_route") @db.VarChar(255)
+  backendRoute  String            @map("backend_route") @db.VarChar(255)
+  module        String            @db.VarChar(100)
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  roles         RolePermissions[]
 
   @@map("permission")
 }
