@@ -468,13 +468,14 @@ model JobOfferTerms {
 }
 
 model AppointmentLetter {
-  id             Int           @id @default(autoincrement())
-  body           String
-  jobApplicantId Int
-  jobApplicant   JobApplicant  @relation(fields: [jobApplicantId], references: [id])
-  terms          CustomTerms[]
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  id              Int           @id @default(autoincrement())
+  body            String
+  jobApplicantId  Int
+  appointmentDate DateTime?
+  jobApplicant    JobApplicant  @relation(fields: [jobApplicantId], references: [id])
+  terms           CustomTerms[]
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
 
   @@map("appointment_letter")
 }
@@ -504,7 +505,7 @@ model JobTerms {
 model Onboarding {
   id                   Int                  @id @default(autoincrement())
   joinedDate           DateTime             @map("joined_date")
-  assignedEmployee     String               @map("assignedEmployee")
+  assignedEmployee     String
   status               OnboardingStatus
   jobApplicantId       Int
   jobApplicant         JobApplicant?        @relation(fields: [jobApplicantId], references: [id])
@@ -525,15 +526,20 @@ enum OnboardingStatus {
 }
 
 model OnboardingActivity {
-  id                 Int        @id @default(autoincrement())
+  id                 Int              @id @default(autoincrement())
   activity           String
   onboardingId       Int
-  onboarding         Onboarding @relation(fields: [onboardingId], references: [id])
+  onboarding         Onboarding       @relation(fields: [onboardingId], references: [id])
   assignedEmployeeId Int?
-  assignedEmployee   Employee?  @relation(fields: [assignedEmployeeId], references: [id])
-
+  assignedEmployee   Employee?        @relation(fields: [assignedEmployeeId], references: [id])
+  activityStatus     OnboardingStatus @default(PENDING)
 
   @@map("onboarding_activity")
+}
+
+model OnboardingActivities {
+  id       Int    @id @default(autoincrement())
+  activity String
 }
 
 model Promotion {
@@ -639,14 +645,20 @@ enum SeperationStatus {
 }
 
 model SeperationActivity {
-  id                 Int        @id @default(autoincrement())
+  id                 Int              @id @default(autoincrement())
   activity           String
   seperationId       Int
-  Seperation         Seperation @relation(fields: [seperationId], references: [id])
+  Seperation         Seperation       @relation(fields: [seperationId], references: [id])
   assignedEmployeeId Int?
-  assignedEmployee   Employee?  @relation(fields: [assignedEmployeeId], references: [id])
+  assignedEmployee   Employee?        @relation(fields: [assignedEmployeeId], references: [id])
+  activtyStatus      SeperationStatus @default(PENDING)
 
   @@map("separation_activity")
+}
+
+model SeperationActivities {
+  id       Int    @id @default(autoincrement())
+  activity String
 }
 
 model Notification {
