@@ -21,18 +21,21 @@ model User {
   roles              UserRoles[]
   createdAt          DateTime    @default(now()) @map("created_at")
   updatedAt          DateTime    @updatedAt @map("updated_at")
+  employeeId         Int
+  employee           Employee    @relation(fields: [employeeId], references: [id])
 
   @@map("user")
 }
 
 model Permission {
-  id        Int               @id @default(autoincrement())
-  name      String            @db.VarChar(255)
-  route     String            @db.VarChar(100)
-  module    String            @db.VarChar(100)
-  createdAt DateTime          @default(now()) @map("created_at")
-  updatedAt DateTime          @updatedAt @map("updated_at")
-  roles     RolePermissions[]
+  id            Int               @id @default(autoincrement())
+  name          String            @db.VarChar(255)
+  frontendRoute String            @map("frontend_route") @db.VarChar(255)
+  backendRoute  String            @map("backend_route") @db.VarChar(255)
+  module        String            @db.VarChar(100)
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  roles         RolePermissions[]
 
   @@map("permission")
 }
@@ -121,6 +124,8 @@ model Employee {
   leavePolicyAssignments LeavePolicyAssignment[]
   leaveAlocations        LeaveAlocation[]
   EmployeeTrainingEvent  EmployeeTrainingEvent[]
+  user                   User?
+  EmployeeCheckIns       EmployeeCheckIn[]
 
   @@map("employee")
 }
@@ -1004,4 +1009,16 @@ model LeaveAlocation {
   leavePolicyAssignment   LeavePolicyAssignment? @relation(fields: [leavePolicyAssignmentId], references: [id])
 
   @@map("leave_alocation")
+}
+model EmployeeCheckIn {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  time        DateTime
+  inOut      String   @db.VarChar(255)
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  @@map("employee_check_in")
 }
