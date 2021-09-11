@@ -711,7 +711,7 @@ model TrainingEvent {
   eventName        String   @db.VarChar(100)
   eventStatus      String   @db.VarChar(100)
   startTime        DateTime @map("start_time")
-  endTime          DateTime @map("start_end")
+  endTime          DateTime @map("end_time")
   trainerName      String   @db.VarChar(100)
   trainerEmail     String   @db.VarChar(100)
   trainerContactNo Int
