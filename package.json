@@ -7,16 +7,21 @@
 		"migrate:dev": "npx prisma migrate dev",
 		"reset:dev": "npx prisma migrate reset",
 		"db:push": "npx prisma db push",
+		"seed:dev": "npx prisma db seed --preview-feature",
 		"gen": "npx prisma generate",
 		"init": "npm install && node init.js && npm run migrate:dev && npm run gen",
 		"update": "git fetch && git pull && npm install && npm run migrate:dev && npm run gen",
-		"studio": "npx prisma studio"
+		"studio": "npx prisma studio",
+		"ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\""
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"prisma": "^2.30.3"
+		"@types/node": "^16.7.12",
+		"prisma": "^2.30.3",
+		"ts-node": "^10.2.1",
+		"typescript": "^4.4.2"
 	},
 	"dependencies": {
 		"@prisma/client": "^2.30.3"

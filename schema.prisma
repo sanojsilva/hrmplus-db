@@ -29,6 +29,7 @@ model User {
 
 model Permission {
   id            Int               @id @default(autoincrement())
+  code          String            @unique @db.VarChar(20)
   name          String            @db.VarChar(255)
   frontendRoute String            @map("frontend_route") @db.VarChar(255)
   backendRoute  String            @map("backend_route") @db.VarChar(255)
@@ -1010,12 +1011,13 @@ model LeaveAlocation {
 
   @@map("leave_alocation")
 }
+
 model EmployeeCheckIn {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  time        DateTime
-  inOut      String   @db.VarChar(255)
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  time      DateTime
+  inOut     String   @db.VarChar(255)
 
   employeeId Int
   employee   Employee @relation(fields: [employeeId], references: [id])
