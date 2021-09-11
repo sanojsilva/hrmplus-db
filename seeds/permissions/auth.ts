@@ -1,43 +1,45 @@
 import { Permission } from "@prisma/client";
 
+//starts from 1 - 100
+
 const authPermissions: Partial<Permission>[] = [
   {
-    code: "A1",
+    id: 1,
     name: "Login",
     frontendRoute: "/dashboard/login",
     backendRoute: "/auth/login",
     module: "auth",
   },
   {
-    code: "A2",
+    id: 2,
     name: "View Users",
     frontendRoute: "/dashboard/core/auth/users",
     backendRoute: "/auth/users/view-all",
     module: "auth",
   },
   {
-    code: "A3",
+    id: 3,
     name: "Create User",
     frontendRoute: "/dashboard/core/auth/create-user",
     backendRoute: "/auth/create-user",
     module: "auth",
   },
   {
-    code: "A4",
+    id: 4,
     name: "View Roles",
     frontendRoute: "/dashboard/core/auth/roles",
     backendRoute: "/auth/roles/view-all",
     module: "auth",
   },
   {
-    code: "A5",
+    id: 5,
     name: "Create Role",
     frontendRoute: "/dashboard/core/auth/create-role",
     backendRoute: "/auth/create-role",
     module: "auth",
   },
   {
-    code: "A6",
+    id: 6,
     name: "Assign Role Permissions",
     frontendRoute: "/dashboard/core/auth/assign-role-permissions",
     backendRoute: "/auth/roles/assign-permissions",
