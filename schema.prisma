@@ -121,6 +121,8 @@ model Employee {
   leavePolicyAssignments LeavePolicyAssignment[]
   leaveAlocations        LeaveAlocation[]
 
+  TrainingFeedback         TrainingFeedback[]
+  EmployeeTrainingFeedback EmployeeTrainingFeedback[]
   @@map("employee")
 }
 
@@ -697,21 +699,72 @@ model SkillDetails {
 }
 
 model TrainingDetails {
-  id              Int           @id @default(autoincrement())
-  skillMapId      Int
-  skillDetails    SkillMap      @relation(fields: [skillMapId], references: [id])
-  trainingEventId Int
-  trainngEvent    TrainingEvent @relation(fields: [trainingEventId], references: [id])
+  id                 Int           @id @default(autoincrement())
+  skillMapId         Int
+  skillDetails       SkillMap      @relation(fields: [skillMapId], references: [id])
+  trainingEventId    Int
+  trainngEvent       TrainingEvent @relation(fields: [trainingEventId], references: [id])
+  trainingFeedbackId Int?
 }
 
 model TrainingEvent {
-  id              Int               @id @default(autoincrement())
-  name            String
-  startTime       DateTime
-  endTime         DateTime
-  trainerName     String
-  location        String
-  trainingDetails TrainingDetails[]
+  id               Int      @id @default(autoincrement())
+  eventName        String   @db.VarChar(100)
+  eventStatus      String   @db.VarChar(100)
+  startTime        DateTime @map("start_time")
+  endTime          DateTime @map("start_end")
+  trainerName      String   @db.VarChar(100)
+  trainerEmail     String   @db.VarChar(100)
+  trainerContactNo Int
+  location         String   @db.VarChar(100)
+  level            String   @db.VarChar(100)
+  type             String   @db.VarChar(100)
+  introduction     String   @db.VarChar(200)
+  hasCertificate   Boolean  @default(false)
+
+  trainingDetails  TrainingDetails[]
+  TrainingFeedback TrainingFeedback[]
+
+  EmployeeTrainingEvent EmployeeTrainingEvent[]
+  @@map("training_event")
+}
+
+model EmployeeTrainingEvent {
+  id          Int     @id @default(autoincrement())
+  status      String  @db.VarChar(10)
+  attendance  Boolean @default(false)
+  isMandatory Boolean @default(false)
+
+  employeeId Int      @map("employee_id")
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  trainingEventId Int           @map("training_event_id")
+  trainingEvent   TrainingEvent @relation(fields: [trainingEventId], references: [id])
+
+  @@id([employeeId, trainingEventId])
+  @@map("employee_training_event")
+}
+
+model TrainingFeedback {
+  id       Int    @id @default(autoincrement())
+  feedback String @db.VarChar(200)
+  rating   Int
+
+  employeeTrainingEventId Int
+  employeeTrainingEvent   EmployeeTrainingEvent @relation(fields: [employeeTrainingEventId], references: [id])
+
+  @@map("training_feedback")
+}
+
+model TrainingResult {
+  id      Int    @id @default(autoincrement())
+  comment String @db.VarChar(200)
+  grade   String @db.VarChar(1)
+
+  employeeTrainingEventId Int
+  employeeTrainingEvent   EmployeeTrainingEvent @relation(fields: [employeeTrainingEventId], references: [id])
+
+  @@map("training_result")
 }
 
 model LeavePeriod {
@@ -786,28 +839,30 @@ model LeavePolicyDetail {
 }
 
 model ShiftType {
-  id                          Int               @id @default(autoincrement())
-  shiftName                   String            @db.VarChar(100)
-  startTime                   String            @db.VarChar(5)
-  endTime                     String            @db.VarChar(5)
-  determineCheckinAndCheckout Int
-  createdAt                   DateTime          @default(now()) @map("created_at")
-  updatedAt                   DateTime          @updatedAt @map("updated_at")
-  holidayListId               Int
-  holidayList                 HolidayList       @relation(fields: [holidayListId], references: [id])
-  shiftRequest                ShiftRequest[]
-  shiftAssignment             ShiftAssignment[]
+  id              Int               @id @default(autoincrement())
+  shiftName       String            @db.VarChar(100)
+  startTime       String            @db.VarChar(5)
+  endTime         String            @db.VarChar(5)
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  holidayListId   Int
+  holidayList     HolidayList       @relation(fields: [holidayListId], references: [id])
+  shiftRequest    ShiftRequest[]
+  shiftAssignment ShiftAssignment[]
 
   @@map("shift_type")
 }
 
 model ShiftRequest {
-  id        Int      @id @default(autoincrement())
-  approver  String   @db.VarChar(100)
+  id Int @id @default(autoincrement())
+
   startDate DateTime @map("start_date")
   endDate   DateTime @map("end_date")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  approver  String   @db.VarChar(100)
+  status    Boolean  @default(false)
 
   shiftTypeId Int
   shiftType   ShiftType @relation(fields: [shiftTypeId], references: [id])
