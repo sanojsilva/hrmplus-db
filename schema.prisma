@@ -120,9 +120,8 @@ model Employee {
   AttendanceRequest      AttendanceRequest[]
   leavePolicyAssignments LeavePolicyAssignment[]
   leaveAlocations        LeaveAlocation[]
+  EmployeeTrainingEvent  EmployeeTrainingEvent[]
 
-  TrainingFeedback         TrainingFeedback[]
-  EmployeeTrainingFeedback EmployeeTrainingFeedback[]
   @@map("employee")
 }
 
@@ -722,18 +721,21 @@ model TrainingEvent {
   introduction     String   @db.VarChar(200)
   hasCertificate   Boolean  @default(false)
 
-  trainingDetails  TrainingDetails[]
-  TrainingFeedback TrainingFeedback[]
-
+  trainingDetails       TrainingDetails[]
   EmployeeTrainingEvent EmployeeTrainingEvent[]
+
   @@map("training_event")
 }
 
 model EmployeeTrainingEvent {
-  id          Int     @id @default(autoincrement())
-  status      String  @db.VarChar(10)
-  attendance  Boolean @default(false)
-  isMandatory Boolean @default(false)
+  // id               Int     @id @default(autoincrement())
+  status           String  @db.VarChar(10)
+  attendance       Boolean @default(false)
+  isMandatory      Boolean @default(false)
+  employeeFeedback String  @db.VarChar(200)
+  employeerating   Int
+  trainerComment   String  @db.VarChar(200)
+  trainerGrade     String  @db.VarChar(1)
 
   employeeId Int      @map("employee_id")
   employee   Employee @relation(fields: [employeeId], references: [id])
@@ -743,28 +745,6 @@ model EmployeeTrainingEvent {
 
   @@id([employeeId, trainingEventId])
   @@map("employee_training_event")
-}
-
-model TrainingFeedback {
-  id       Int    @id @default(autoincrement())
-  feedback String @db.VarChar(200)
-  rating   Int
-
-  employeeTrainingEventId Int
-  employeeTrainingEvent   EmployeeTrainingEvent @relation(fields: [employeeTrainingEventId], references: [id])
-
-  @@map("training_feedback")
-}
-
-model TrainingResult {
-  id      Int    @id @default(autoincrement())
-  comment String @db.VarChar(200)
-  grade   String @db.VarChar(1)
-
-  employeeTrainingEventId Int
-  employeeTrainingEvent   EmployeeTrainingEvent @relation(fields: [employeeTrainingEventId], references: [id])
-
-  @@map("training_result")
 }
 
 model LeavePeriod {
