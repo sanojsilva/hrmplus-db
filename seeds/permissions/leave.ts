@@ -1,0 +1,141 @@
+import { Permission } from "@prisma/client";
+
+//starts from 400 - 500
+
+const leavePermissions: Partial<Permission>[] = [
+  {
+    id: 400,
+    name: "Create Leave Types",
+    frontendRoute: "/leave/leavetypes",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 401,
+    name: "Create Leave Allocation",
+    frontendRoute: "/leave/leaveallocation",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 402,
+    name: "View Holiday Lists",
+    frontendRoute: "/leave/holiday-lists",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 403,
+    name: "Create Holiday Lists",
+    frontendRoute: "/leave/create-holiday-list",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 404,
+    name: "Edit Holiday Lists",
+    frontendRoute: "/leave/edit-holiday-list/:id",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 405,
+    name: "View Holiday Calendar",
+    frontendRoute: "/leave/holiday-calendar/:holidayListId",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 406,
+    name: "Create Leave Period",
+    frontendRoute: "/leave/create-leave-period",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 407,
+    name: "Edit Leave Period",
+    frontendRoute: "/leave/edit-leave-period/:id",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 408,
+    name: "View Leave Periods",
+    frontendRoute: "/leave/leave-periods",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 409,
+    name: "Create Leave Types",
+    frontendRoute: "/leave/create-leave-type",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 410,
+    name: "Edit Leave Types",
+    frontendRoute: "/leave/edit-leave-type/:id",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 411,
+    name: "View Leave Types",
+    frontendRoute: "/leave/leave-types",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 412,
+    name: "Create Leave Policy",
+    frontendRoute: "/leave/create-leave-policy",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 413,
+    name: "Edit Leave Policy",
+    frontendRoute: "/leave/edit-leave-policy/:id",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 414,
+    name: "View Leave Policies",
+    frontendRoute: "/leave/leave-policies",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 415,
+    name: "View Leave Allocations",
+    frontendRoute: "/leave/leave-alocationss",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 416,
+    name: "View Leave Policy Assignments",
+    frontendRoute: "/leave/leave-policy-assignments",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 417,
+    name: "Create Leave Application",
+    frontendRoute: "/leave/create-leave-application",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 418,
+    name: "View Leave Application",
+    frontendRoute: "/leave/leave-applications",
+    backendRoute: "",
+    module: "leave",
+  },
+];
+
+export default leavePermissions;
