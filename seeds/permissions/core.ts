@@ -60,14 +60,14 @@ const coreRoutes: Partial<Permission>[] = [
     module: "core",
   },
   {
-    id: 204,
+    id: 208,
     name: "View Employment Types",
     frontendRoute: "/dashboard/core/employment-types",
     backendRoute: "",
     module: "core",
   },
   {
-    id: 205,
+    id: 209,
     name: "Create Employment Type",
     frontendRoute: "/dashboard/core/create-employment-type",
     backendRoute: "",
