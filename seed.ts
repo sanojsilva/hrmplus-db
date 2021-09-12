@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import authPermissions from "./seeds/permissions/auth";
+import coreRoutes from "./seeds/permissions/core";
 import lifecyclePermissions from "./seeds/permissions/lifecycle";
 import roles from "./seeds/roles";
 const db = new PrismaClient();
@@ -21,6 +22,21 @@ async function main() {
   }
 
   for (const permission of lifecyclePermissions) {
+    await db.permission.upsert({
+      where: {
+        id: permission.id,
+      },
+      update: {
+        ...permission,
+      },
+      //@ts-ignore
+      create: {
+        ...permission,
+      },
+    });
+  }
+
+  for (const permission of coreRoutes) {
     await db.permission.upsert({
       where: {
         id: permission.id,
