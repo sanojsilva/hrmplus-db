@@ -9,6 +9,10 @@ import coreRoutes from "./seeds/permissions/core";
 import lifecyclePermissions from "./seeds/permissions/lifecycle";
 import recruitmentPermissions from "./seeds/permissions/recruitment";
 import roles from "./seeds/roles";
+import users from "./seeds/users";
+import holidayLists from "./seeds/holidaylists";
+import userRoles from "./seeds/userRoles";
+import rolePermissions from "./seeds/rolePermissions";
 const db = new PrismaClient();
 
 async function main() {
@@ -134,6 +138,20 @@ async function main() {
     });
   }
 
+  for (const hl of holidayLists) {
+    await db.holidayList.upsert({
+      where: {
+        id: hl.id,
+      },
+      create: {
+        ...hl,
+      },
+      update: {
+        ...hl,
+      },
+    });
+  }
+
   await db.company.upsert({
     where: {
       id: company.id,
@@ -158,6 +176,53 @@ async function main() {
       //@ts-ignore
       update: {
         ...emp,
+      },
+    });
+  }
+  for (const user of users) {
+    await db.user.upsert({
+      where: {
+        id: user.id,
+      },
+      create: {
+        ...user,
+      },
+      update: {
+        ...user,
+      },
+    });
+  }
+
+  for (const userRole of userRoles) {
+    await db.userRoles.upsert({
+      where: {
+        roleId_userId: {
+          userId: userRole.userId,
+          roleId: userRole.roleId,
+        },
+      },
+      create: {
+        ...userRole,
+      },
+      update: {
+        ...userRole,
+      },
+    });
+  }
+
+  for (const rolePermission of rolePermissions) {
+    await db.rolePermissions.upsert({
+      where: {
+        roleId_permissionId: {
+          permissionId: rolePermission.permissionId,
+          roleId: rolePermission.roleId,
+        },
+      },
+      create: {
+        ...rolePermission,
+      },
+      update: {
+        ...rolePermission,
       },
     });
   }
