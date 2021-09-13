@@ -193,12 +193,13 @@ model WorkHistory {
 }
 
 model Grade {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(255)
+  id           Int           @id @default(autoincrement())
+  name         String        @unique @db.VarChar(255)
   //pay?
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  employee  Employee[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  employee     Employee[]
+  designations Designation[]
 
 
   @@map("grade")
@@ -240,6 +241,8 @@ model Designation {
   promotionCurrent    PromotionDetails[]    @relation("promotionCurrent")
   promotionNew        PromotionDetails[]    @relation("promotionNew")
   responsibilities    Responsibilities[]
+  gradeId             Int?                  @map("grade_id")
+  grade               Grade?                @relation(fields: [gradeId], references: [id])
 
   @@map("designation")
 }
