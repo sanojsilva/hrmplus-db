@@ -1048,6 +1048,7 @@ model ResponsibilityAllocation {
   responsibilities   Responsibilities[]   @relation(fields: [responsibilityId], references: [id])
   weightage          Int
   score              Int
+  comments           String?
   status             ResponsibilityStatus
   deadline           DateTime
   assignedEmployeeId Int?
