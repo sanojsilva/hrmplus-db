@@ -97,19 +97,19 @@ model Employee {
   internalWorkHistory    InternalWorkHistory?
   salary                 Salary?
   gradeId                Int?
-  grade                  Grade?                   @relation(fields: [gradeId], references: [id])
+  grade                  Grade?                     @relation(fields: [gradeId], references: [id])
   healthInsuaranceId     Int?
-  healthInsuarance       HealthInsuarance?        @relation(fields: [healthInsuaranceId], references: [id])
+  healthInsuarance       HealthInsuarance?          @relation(fields: [healthInsuaranceId], references: [id])
   designationId          Int
-  designation            Designation              @relation(fields: [designationId], references: [id])
+  designation            Designation                @relation(fields: [designationId], references: [id])
   departmentId           Int
-  department             Department               @relation(fields: [departmentId], references: [id])
+  department             Department                 @relation(fields: [departmentId], references: [id])
   employmentTypeId       Int?
-  employmentType         EmploymentType?          @relation(fields: [employmentTypeId], references: [id])
+  employmentType         EmploymentType?            @relation(fields: [employmentTypeId], references: [id])
   jobApplicantId         Int?
-  JobApplicant           JobApplicant?            @relation(fields: [jobApplicantId], references: [id])
+  JobApplicant           JobApplicant?              @relation(fields: [jobApplicantId], references: [id])
   onboarding             Onboarding?
-  onboardingActivity     OnboardingActivity?
+  onboardingActivity     OnboardingActivity[]
   transfer               Transfer[]
   seperation             Seperation?
   seperationActivities   SeperationActivity[]
@@ -126,6 +126,7 @@ model Employee {
   EmployeeTrainingEvent  EmployeeTrainingEvent[]
   user                   User?
   EmployeeCheckIns       EmployeeCheckIn[]
+  responsibilities       ResponsibilityAllocation[]
 
   @@map("employee")
 }
@@ -192,12 +193,13 @@ model WorkHistory {
 }
 
 model Grade {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(255)
+  id           Int           @id @default(autoincrement())
+  name         String        @unique @db.VarChar(255)
   //pay?
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  employee  Employee[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  employee     Employee[]
+  designations Designation[]
 
 
   @@map("grade")
@@ -238,7 +240,9 @@ model Designation {
   jobOffers           JobOffer[]
   promotionCurrent    PromotionDetails[]    @relation("promotionCurrent")
   promotionNew        PromotionDetails[]    @relation("promotionNew")
-
+  responsibilities    Responsibilities[]
+  gradeId             Int?                  @map("grade_id")
+  grade               Grade?                @relation(fields: [gradeId], references: [id])
 
   @@map("designation")
 }
@@ -279,14 +283,15 @@ model Salary {
 }
 
 model Department {
-  id                Int               @id @default(autoincrement())
-  name              String            @db.VarChar(255)
-  createdAt         DateTime          @default(now()) @map("created_at")
-  updatedAt         DateTime          @updatedAt @map("updated_at")
+  id                Int                @id @default(autoincrement())
+  name              String             @db.VarChar(255)
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
   employees         Employee[]
   staffingPlans     StaffingPlan[]
-  departmentCurrent TransferDetails[] @relation("departmentCurrent")
-  departmentNew     TransferDetails[] @relation("departmentNew")
+  departmentCurrent TransferDetails[]  @relation("departmentCurrent")
+  departmentNew     TransferDetails[]  @relation("departmentNew")
+  responsibilities  Responsibilities[]
 }
 
 model EmploymentType {
@@ -1022,4 +1027,43 @@ model EmployeeCheckIn {
   employee   Employee @relation(fields: [employeeId], references: [id])
 
   @@map("employee_check_in")
+}
+
+//performance
+
+model Responsibilities {
+  id            Int                        @id @default(autoincrement())
+  name          String
+  departmentId  Int
+  department    Department                 @relation(fields: [departmentId], references: [id])
+  designationId Int
+  designation   Designation                @relation(fields: [designationId], references: [id])
+  createdAt     DateTime                   @default(now()) @map("created_at")
+  updatedAt     DateTime                   @updatedAt @map("updated_at")
+  allocations   ResponsibilityAllocation[]
+
+  @@map("responsibilities")
+}
+
+model ResponsibilityAllocation {
+  id                 Int                  @id @default(autoincrement())
+  responsibilityId   Int
+  responsibilities   Responsibilities[]   @relation(fields: [responsibilityId], references: [id])
+  weightage          Int
+  score              Int
+  comments           String?
+  status             ResponsibilityStatus
+  deadline           DateTime
+  dateCompleted      DateTime?            @default(now())
+  assignedEmployeeId Int?
+  assignedEmployee   Employee?            @relation(fields: [assignedEmployeeId], references: [id])
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+
+  @@map("responsibility_allocation")
+}
+
+enum ResponsibilityStatus {
+  PENDING    @map("pending")
+  COMPLETED  @map("completed")
 }
