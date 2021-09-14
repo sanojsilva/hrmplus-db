@@ -189,6 +189,7 @@ const designations = [
     description: "Recruiter",
     createdAt: "2021-09-12T06:21:41.173Z",
     updatedAt: "2021-09-12T06:21:41.173Z",
+    gradeId: 6,
   },
   {
     id: 25,
@@ -196,6 +197,7 @@ const designations = [
     description: "Human resource information specialist",
     createdAt: "2021-09-12T06:21:41.173Z",
     updatedAt: "2021-09-12T06:21:41.173Z",
+    gradeId: 6,
   },
 ];
 
