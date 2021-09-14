@@ -26,7 +26,7 @@ const recruitmentPermissions: Partial<Permission>[] = [
   },
   {
     id: 303,
-    name: "View ALl Appointment Letters",
+    name: "View All Appointment Letters",
     frontendRoute: "/dashboard/recruitment/appointment-letters",
     backendRoute: "",
     module: "recruitment",
@@ -69,7 +69,7 @@ const recruitmentPermissions: Partial<Permission>[] = [
   {
     id: 309,
     name: "View All Job Openings",
-    frontendRoute: "/dashboard/recruitment/create-appointment-letter",
+    frontendRoute: "/dashboard/recruitment/job-openings",
     backendRoute: "",
     module: "recruitment",
   },

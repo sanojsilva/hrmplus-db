@@ -380,7 +380,7 @@ model JobOpening {
   id          Int     @id @default(autoincrement())
   jobTitle    String  @map("job_title") @db.VarChar(100)
   status      String  @db.VarChar(100)
-  description String  @db.VarChar(255)
+  description String
   salaryRange String  @map("salary_range") @db.VarChar(255)
   published   Boolean @default(false)
 

@@ -160,6 +160,20 @@ const designations = [
     createdAt: "2021-09-12T06:21:41.173Z",
     updatedAt: "2021-09-12T06:21:41.173Z",
   },
+  {
+    id: 24,
+    name: "Recruiter",
+    description: "Recruiter",
+    createdAt: "2021-09-12T06:21:41.173Z",
+    updatedAt: "2021-09-12T06:21:41.173Z",
+  },
+  {
+    id: 25,
+    name: "Human resource information specialist",
+    description: "Human resource information specialist",
+    createdAt: "2021-09-12T06:21:41.173Z",
+    updatedAt: "2021-09-12T06:21:41.173Z",
+  },
 ];
 
 export default designations;
