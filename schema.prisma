@@ -1053,6 +1053,8 @@ model ResponsibilityAllocation {
   score              Int
   comments           String?
   status             ResponsibilityStatus
+  expected           Int?
+  completed          Int?
   deadline           DateTime
   dateCompleted      DateTime?            @default(now())
   assignedEmployeeId Int?

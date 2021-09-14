@@ -13,6 +13,7 @@ import users from "./seeds/users";
 import holidayLists from "./seeds/holidaylists";
 import userRoles from "./seeds/userRoles";
 import rolePermissions from "./seeds/rolePermissions";
+import grade from "./seeds/grade";
 const db = new PrismaClient();
 
 async function main() {
@@ -134,6 +135,21 @@ async function main() {
       },
       update: {
         ...des,
+      },
+    });
+  }
+
+  for (const gr of grade) {
+    await db.grade.upsert({
+      where: {
+        id: gr.id,
+      },
+      //@ts-ignore
+      create: {
+        ...gr,
+      },
+      update: {
+        ...gr,
       },
     });
   }
