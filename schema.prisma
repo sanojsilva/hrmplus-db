@@ -1054,6 +1054,7 @@ model ResponsibilityAllocation {
   comments           String?
   status             ResponsibilityStatus
   deadline           DateTime
+  dateCompleted      DateTime?            @default(now())
   assignedEmployeeId Int?
   assignedEmployee   Employee?            @relation(fields: [assignedEmployeeId], references: [id])
   createdAt          DateTime             @default(now()) @map("created_at")
