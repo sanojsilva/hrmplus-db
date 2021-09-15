@@ -125,20 +125,6 @@ async function main() {
     });
   }
 
-  for (const des of designations) {
-    await db.designation.upsert({
-      where: {
-        id: des.id,
-      },
-      create: {
-        ...des,
-      },
-      update: {
-        ...des,
-      },
-    });
-  }
-
   for (const gr of grade) {
     await db.grade.upsert({
       where: {
@@ -150,6 +136,20 @@ async function main() {
       },
       update: {
         ...gr,
+      },
+    });
+  }
+
+  for (const des of designations) {
+    await db.designation.upsert({
+      where: {
+        id: des.id,
+      },
+      create: {
+        ...des,
+      },
+      update: {
+        ...des,
       },
     });
   }
