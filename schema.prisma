@@ -1074,10 +1074,8 @@ enum ResponsibilityStatus {
 model ResponsibilityTemplate {
   id               Int                          @id @default(autoincrement())
   name             String
+  designationId    Int?
   responsibilities ResponsibilitiesOfTemplate[]
-  expected         Int
-  weightage        Int
-  deadline         DateTime                     @default(now())
   createdAt        DateTime                     @default(now()) @map("created_at")
   updatedAt        DateTime                     @updatedAt @map("updated_at")
 }
@@ -1088,6 +1086,9 @@ model ResponsibilitiesOfTemplate {
   template         ResponsibilityTemplate @relation(fields: [templateId], references: [id])
   responsibilityId Int
   responsibility   Responsibilities       @relation(fields: [responsibilityId], references: [id])
+  expected         Int?
+  weightage        Int
+  deadline         DateTime               @default(now())
   createdAt        DateTime               @default(now()) @map("created_at")
   updatedAt        DateTime               @updatedAt @map("updated_at")
 }

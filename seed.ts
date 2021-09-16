@@ -14,6 +14,7 @@ import holidayLists from "./seeds/holidaylists";
 import userRoles from "./seeds/userRoles";
 import rolePermissions from "./seeds/rolePermissions";
 import grade from "./seeds/grade";
+import performancePermissions from "./seeds/permissions/performance";
 const db = new PrismaClient();
 
 async function main() {
@@ -67,6 +68,22 @@ async function main() {
 
   //400-500
   for (const permission of leavePermissions) {
+    await db.permission.upsert({
+      where: {
+        id: permission.id,
+      },
+      update: {
+        ...permission,
+      },
+      //@ts-ignore
+      create: {
+        ...permission,
+      },
+    });
+  }
+
+  //500-600
+  for (const permission of performancePermissions) {
     await db.permission.upsert({
       where: {
         id: permission.id,
