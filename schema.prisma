@@ -415,15 +415,23 @@ enum JobApplicantStatus {
 }
 
 model JobApplicant {
-  id            Int                @id @default(autoincrement())
-  applicantName String             @map("applicant_name") @db.VarChar(100)
-  email         String             @db.VarChar(200)
-  status        JobApplicantStatus
-  phoneNumber   String             @map("phone_number") @db.VarChar(12)
-  dateOfBirth   DateTime           @map("date_of_birth")
-  resume        String             @db.VarChar(255)
-  coverLetter   String             @map("cover_letter") @db.VarChar(255)
-  gender        Gender
+  id                     Int                @id @default(autoincrement())
+  applicantName          String             @map("applicant_name") @db.VarChar(100)
+  email                  String             @db.VarChar(200)
+  status                 JobApplicantStatus
+  phoneNumber            String             @map("phone_number") @db.VarChar(12)
+  dateOfBirth            DateTime           @map("date_of_birth")
+  resume                 String             @db.VarChar(255)
+  coverLetter            String             @map("cover_letter") @db.VarChar(255)
+  gender                 Gender
+  haveDegree             Boolean?           @default(false)
+  degree                 String?            @db.VarChar(300)
+  passedAl               Boolean?           @default(false)
+  alResults              String?            @db.VarChar(250)
+  passedOls              Boolean?           @default(false)
+  workExperience         String?
+  academicQualifications String?
+  remarks                String?
 
   jobOpeningId         Int
   jobApplicantSourceId Int?
@@ -445,7 +453,7 @@ model JobOffer {
   id            Int             @id @default(autoincrement())
   status        JobOfferStatus
   offerDate     DateTime        @map("offer_date")
-  description   String          @db.VarChar(255)
+  description   String
   applicantId   Int
   applicant     JobApplicant    @relation(fields: [applicantId], references: [id])
   designationId Int
@@ -459,9 +467,10 @@ model JobOffer {
 }
 
 model OfferTerm {
-  id        Int             @id @default(autoincrement())
-  term      String          @db.VarChar(255)
-  jobOffers JobOfferTerms[]
+  id          Int             @id @default(autoincrement())
+  term        String          @db.VarChar(255)
+  description String          @db.VarChar(500)
+  jobOffers   JobOfferTerms[]
 
   @@map("offer_term")
 }
