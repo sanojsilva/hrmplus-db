@@ -327,6 +327,7 @@ enum MaritalStatus {
 }
 
 enum JobOfferStatus {
+  NOT_SENT_YET       @map("not_sent_yet")
   AWAITING_RESPONSE  @map("awaiting_response")
   ACCEPTED           @map("accepted")
   REJECTED           @map("rejected")
@@ -415,15 +416,23 @@ enum JobApplicantStatus {
 }
 
 model JobApplicant {
-  id            Int                @id @default(autoincrement())
-  applicantName String             @map("applicant_name") @db.VarChar(100)
-  email         String             @db.VarChar(200)
-  status        JobApplicantStatus
-  phoneNumber   String             @map("phone_number") @db.VarChar(12)
-  dateOfBirth   DateTime           @map("date_of_birth")
-  resume        String             @db.VarChar(255)
-  coverLetter   String             @map("cover_letter") @db.VarChar(255)
-  gender        Gender
+  id                     Int                @id @default(autoincrement())
+  applicantName          String             @map("applicant_name") @db.VarChar(100)
+  email                  String             @db.VarChar(200)
+  status                 JobApplicantStatus
+  phoneNumber            String             @map("phone_number") @db.VarChar(12)
+  dateOfBirth            DateTime           @map("date_of_birth")
+  resume                 String             @db.VarChar(255)
+  coverLetter            String             @map("cover_letter") @db.VarChar(255)
+  gender                 Gender
+  haveDegree             Boolean?           @default(false)
+  degree                 String?            @db.VarChar(300)
+  passedAl               Boolean?           @default(false)
+  alResults              String?            @db.VarChar(250)
+  passedOls              Boolean?           @default(false)
+  workExperience         String?
+  academicQualifications String?
+  remarks                String?
 
   jobOpeningId         Int
   jobApplicantSourceId Int?
@@ -445,7 +454,7 @@ model JobOffer {
   id            Int             @id @default(autoincrement())
   status        JobOfferStatus
   offerDate     DateTime        @map("offer_date")
-  description   String          @db.VarChar(255)
+  description   String
   applicantId   Int
   applicant     JobApplicant    @relation(fields: [applicantId], references: [id])
   designationId Int
@@ -459,9 +468,10 @@ model JobOffer {
 }
 
 model OfferTerm {
-  id        Int             @id @default(autoincrement())
-  term      String          @db.VarChar(255)
-  jobOffers JobOfferTerms[]
+  id          Int             @id @default(autoincrement())
+  term        String          @db.VarChar(255)
+  description String          @db.VarChar(500)
+  jobOffers   JobOfferTerms[]
 
   @@map("offer_term")
 }
@@ -739,13 +749,13 @@ model TrainingEvent {
 
 model EmployeeTrainingEvent {
   // id               Int     @id @default(autoincrement())
-  status           String  @db.VarChar(10)
+  status           String  @default("Scheduled") @db.VarChar(10)
   attendance       Boolean @default(false)
   isMandatory      Boolean @default(false)
-  employeeFeedback String  @db.VarChar(200)
-  employeerating   Int
-  trainerComment   String  @db.VarChar(200)
-  trainerGrade     String  @db.VarChar(1)
+  employeeFeedback String  @default("Pendding") @db.VarChar(200)
+  employeerating   Int     @default(0)
+  trainerComment   String  @default("Pendding") @db.VarChar(200)
+  trainerGrade     String  @default("Q") @db.VarChar(1)
 
   employeeId Int      @map("employee_id")
   employee   Employee @relation(fields: [employeeId], references: [id])
@@ -1032,15 +1042,16 @@ model EmployeeCheckIn {
 //performance
 
 model Responsibilities {
-  id            Int                        @id @default(autoincrement())
+  id            Int                          @id @default(autoincrement())
   name          String
   departmentId  Int
-  department    Department                 @relation(fields: [departmentId], references: [id])
+  department    Department                   @relation(fields: [departmentId], references: [id])
   designationId Int
-  designation   Designation                @relation(fields: [designationId], references: [id])
-  createdAt     DateTime                   @default(now()) @map("created_at")
-  updatedAt     DateTime                   @updatedAt @map("updated_at")
+  designation   Designation                  @relation(fields: [designationId], references: [id])
+  createdAt     DateTime                     @default(now()) @map("created_at")
+  updatedAt     DateTime                     @updatedAt @map("updated_at")
   allocations   ResponsibilityAllocation[]
+  template      ResponsibilitiesOfTemplate[]
 
   @@map("responsibilities")
 }
@@ -1048,7 +1059,7 @@ model Responsibilities {
 model ResponsibilityAllocation {
   id                 Int                  @id @default(autoincrement())
   responsibilityId   Int
-  responsibilities   Responsibilities[]   @relation(fields: [responsibilityId], references: [id])
+  responsibilities   Responsibilities     @relation(fields: [responsibilityId], references: [id])
   weightage          Int
   score              Int
   comments           String?
@@ -1068,4 +1079,26 @@ model ResponsibilityAllocation {
 enum ResponsibilityStatus {
   PENDING    @map("pending")
   COMPLETED  @map("completed")
+}
+
+model ResponsibilityTemplate {
+  id               Int                          @id @default(autoincrement())
+  name             String
+  designationId    Int?
+  responsibilities ResponsibilitiesOfTemplate[]
+  createdAt        DateTime                     @default(now()) @map("created_at")
+  updatedAt        DateTime                     @updatedAt @map("updated_at")
+}
+
+model ResponsibilitiesOfTemplate {
+  id               Int                    @id @default(autoincrement())
+  templateId       Int
+  template         ResponsibilityTemplate @relation(fields: [templateId], references: [id])
+  responsibilityId Int
+  responsibility   Responsibilities       @relation(fields: [responsibilityId], references: [id])
+  expected         Int?
+  weightage        Int
+  deadline         DateTime               @default(now())
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
 }
