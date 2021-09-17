@@ -749,13 +749,13 @@ model TrainingEvent {
 
 model EmployeeTrainingEvent {
   // id               Int     @id @default(autoincrement())
-  status           String  @db.VarChar(10)
+  status           String  @default("Scheduled") @db.VarChar(10)
   attendance       Boolean @default(false)
   isMandatory      Boolean @default(false)
-  employeeFeedback String  @db.VarChar(200)
-  employeerating   Int
-  trainerComment   String  @db.VarChar(200)
-  trainerGrade     String  @db.VarChar(1)
+  employeeFeedback String  @default("Pendding") @db.VarChar(200)
+  employeerating   Int     @default(0)
+  trainerComment   String  @default("Pendding") @db.VarChar(200)
+  trainerGrade     String  @default("Q") @db.VarChar(1)
 
   employeeId Int      @map("employee_id")
   employee   Employee @relation(fields: [employeeId], references: [id])

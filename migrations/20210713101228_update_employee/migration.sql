@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE "employee" ALTER COLUMN "qr_code" DROP NOT NULL,
-ALTER COLUMN "gradeId" DROP NOT NULL,
-ALTER COLUMN "healthInsuaranceId" DROP NOT NULL,
-ALTER COLUMN "employmentTypeId" DROP NOT NULL;
