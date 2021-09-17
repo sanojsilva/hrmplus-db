@@ -47,6 +47,12 @@ const departments = [
     createdAt: "2021-09-12T06:10:53.619Z",
     updatedAt: "2021-09-12T06:10:53.620Z",
   },
+  {
+    id: 9,
+    name: "Manufacture",
+    createdAt: "2021-09-12T06:10:53.619Z",
+    updatedAt: "2021-09-12T06:10:53.620Z",
+  },
 ];
 
 export default departments;

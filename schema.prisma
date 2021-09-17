@@ -1041,15 +1041,16 @@ model EmployeeCheckIn {
 //performance
 
 model Responsibilities {
-  id            Int                        @id @default(autoincrement())
+  id            Int                          @id @default(autoincrement())
   name          String
   departmentId  Int
-  department    Department                 @relation(fields: [departmentId], references: [id])
+  department    Department                   @relation(fields: [departmentId], references: [id])
   designationId Int
-  designation   Designation                @relation(fields: [designationId], references: [id])
-  createdAt     DateTime                   @default(now()) @map("created_at")
-  updatedAt     DateTime                   @updatedAt @map("updated_at")
+  designation   Designation                  @relation(fields: [designationId], references: [id])
+  createdAt     DateTime                     @default(now()) @map("created_at")
+  updatedAt     DateTime                     @updatedAt @map("updated_at")
   allocations   ResponsibilityAllocation[]
+  template      ResponsibilitiesOfTemplate[]
 
   @@map("responsibilities")
 }
@@ -1057,7 +1058,7 @@ model Responsibilities {
 model ResponsibilityAllocation {
   id                 Int                  @id @default(autoincrement())
   responsibilityId   Int
-  responsibilities   Responsibilities[]   @relation(fields: [responsibilityId], references: [id])
+  responsibilities   Responsibilities     @relation(fields: [responsibilityId], references: [id])
   weightage          Int
   score              Int
   comments           String?
@@ -1077,4 +1078,26 @@ model ResponsibilityAllocation {
 enum ResponsibilityStatus {
   PENDING    @map("pending")
   COMPLETED  @map("completed")
+}
+
+model ResponsibilityTemplate {
+  id               Int                          @id @default(autoincrement())
+  name             String
+  designationId    Int?
+  responsibilities ResponsibilitiesOfTemplate[]
+  createdAt        DateTime                     @default(now()) @map("created_at")
+  updatedAt        DateTime                     @updatedAt @map("updated_at")
+}
+
+model ResponsibilitiesOfTemplate {
+  id               Int                    @id @default(autoincrement())
+  templateId       Int
+  template         ResponsibilityTemplate @relation(fields: [templateId], references: [id])
+  responsibilityId Int
+  responsibility   Responsibilities       @relation(fields: [responsibilityId], references: [id])
+  expected         Int?
+  weightage        Int
+  deadline         DateTime               @default(now())
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
 }
