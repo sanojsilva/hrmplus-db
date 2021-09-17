@@ -327,6 +327,7 @@ enum MaritalStatus {
 }
 
 enum JobOfferStatus {
+  NOT_SENT_YET       @map("not_sent_yet")
   AWAITING_RESPONSE  @map("awaiting_response")
   ACCEPTED           @map("accepted")
   REJECTED           @map("rejected")

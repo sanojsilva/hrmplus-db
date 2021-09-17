@@ -15,6 +15,7 @@ import userRoles from "./seeds/userRoles";
 import rolePermissions from "./seeds/rolePermissions";
 import grade from "./seeds/grade";
 import performancePermissions from "./seeds/permissions/performance";
+import offerTerms from "./seeds/offerTerms";
 const db = new PrismaClient();
 
 async function main() {
@@ -256,6 +257,21 @@ async function main() {
       },
       update: {
         ...rolePermission,
+      },
+    });
+  }
+
+  for (const term of offerTerms) {
+    await db.offerTerm.upsert({
+      where: {
+        id: term.id,
+      },
+      //@ts-ignore
+      create: {
+        ...term,
+      },
+      update: {
+        ...term,
       },
     });
   }
