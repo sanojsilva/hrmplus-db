@@ -14,6 +14,8 @@ import holidayLists from "./seeds/holidaylists";
 import userRoles from "./seeds/userRoles";
 import rolePermissions from "./seeds/rolePermissions";
 import grade from "./seeds/grade";
+import performancePermissions from "./seeds/permissions/performance";
+import offerTerms from "./seeds/offerTerms";
 const db = new PrismaClient();
 
 async function main() {
@@ -81,6 +83,22 @@ async function main() {
     });
   }
 
+  //500-600
+  for (const permission of performancePermissions) {
+    await db.permission.upsert({
+      where: {
+        id: permission.id,
+      },
+      update: {
+        ...permission,
+      },
+      //@ts-ignore
+      create: {
+        ...permission,
+      },
+    });
+  }
+
   //200-300
   for (const permission of coreRoutes) {
     await db.permission.upsert({
@@ -125,20 +143,6 @@ async function main() {
     });
   }
 
-  for (const des of designations) {
-    await db.designation.upsert({
-      where: {
-        id: des.id,
-      },
-      create: {
-        ...des,
-      },
-      update: {
-        ...des,
-      },
-    });
-  }
-
   for (const gr of grade) {
     await db.grade.upsert({
       where: {
@@ -150,6 +154,20 @@ async function main() {
       },
       update: {
         ...gr,
+      },
+    });
+  }
+
+  for (const des of designations) {
+    await db.designation.upsert({
+      where: {
+        id: des.id,
+      },
+      create: {
+        ...des,
+      },
+      update: {
+        ...des,
       },
     });
   }
@@ -239,6 +257,21 @@ async function main() {
       },
       update: {
         ...rolePermission,
+      },
+    });
+  }
+
+  for (const term of offerTerms) {
+    await db.offerTerm.upsert({
+      where: {
+        id: term.id,
+      },
+      //@ts-ignore
+      create: {
+        ...term,
+      },
+      update: {
+        ...term,
       },
     });
   }
