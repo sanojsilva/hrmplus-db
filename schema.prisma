@@ -472,6 +472,7 @@ model OfferTerm {
   term        String          @db.VarChar(255)
   description String          @db.VarChar(500)
   jobOffers   JobOfferTerms[]
+  customTerms CustomTerms[]
 
   @@map("offer_term")
 }
@@ -497,26 +498,25 @@ model AppointmentLetter {
   terms           CustomTerms[]
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
+  letterSent      Boolean?      @default(false)
 
   @@map("appointment_letter")
 }
 
 model CustomTerms {
   id             Int               @id @default(autoincrement())
-  newName        Int
-  termName       JobTerms          @relation(fields: [newName], references: [id])
+  termId         Int
+  offerTerm      OfferTerm         @relation(fields: [termId], references: [id])
   newDescription String            @map("new_description") @db.VarChar(255)
   letterId       Int
   letter         AppointmentLetter @relation(fields: [letterId], references: [id])
-
 
   @@map("custom_terms")
 }
 
 model JobTerms {
-  id          Int           @id @default(autoincrement())
-  name        String
-  customTerms CustomTerms[]
+  id   Int    @id @default(autoincrement())
+  name String
 
   @@map("job_terms")
 }
