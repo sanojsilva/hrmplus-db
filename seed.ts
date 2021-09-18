@@ -23,6 +23,8 @@ import onboardingActs from "./seeds/onboardingActivities";
 import seperationActs from "./seeds/seperationActivities";
 import skills from "./seeds/skills";
 import skillsofDes from "./seeds/skillsofdesignation";
+import leaveTypes from "./seeds/leaveTypes";
+import { leavePolicies, leavePolicyDetails } from "./seeds/leavePolicies";
 const db = new PrismaClient();
 
 async function main() {
@@ -387,6 +389,54 @@ async function main() {
       },
       update: {
         ...term,
+      },
+    });
+  }
+
+  for (const lt of leaveTypes) {
+    await db.leaveType.upsert({
+      where: {
+        id: lt.id,
+      },
+      //@ts-ignore
+      create: {
+        ...lt,
+      },
+      //@ts-ignore
+      update: {
+        ...lt,
+      },
+    });
+  }
+
+  for (const lp of leavePolicies) {
+    await db.leavePolicy.upsert({
+      where: {
+        id: lp.id,
+      },
+      //@ts-ignore
+      create: {
+        ...lp,
+      },
+      //@ts-ignore
+      update: {
+        ...lp,
+      },
+    });
+  }
+
+  for (const ld of leavePolicyDetails) {
+    await db.leavePolicyDetail.upsert({
+      where: {
+        id: ld.id,
+      },
+      //@ts-ignore
+      create: {
+        ...ld,
+      },
+      //@ts-ignore
+      update: {
+        ...ld,
       },
     });
   }
