@@ -90,43 +90,44 @@ model Employee {
   createdAt                    DateTime @default(now()) @map("created_at")
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
-  contactDetails         EmpContactDetails?
-  personalDetails        EmpPersonalDetails?
-  eduQualifications      EducationQualifications?
-  workHistory            WorkHistory?
-  internalWorkHistory    InternalWorkHistory?
-  salary                 Salary?
-  gradeId                Int?
-  grade                  Grade?                     @relation(fields: [gradeId], references: [id])
-  healthInsuaranceId     Int?
-  healthInsuarance       HealthInsuarance?          @relation(fields: [healthInsuaranceId], references: [id])
-  designationId          Int
-  designation            Designation                @relation(fields: [designationId], references: [id])
-  departmentId           Int
-  department             Department                 @relation(fields: [departmentId], references: [id])
-  employmentTypeId       Int?
-  employmentType         EmploymentType?            @relation(fields: [employmentTypeId], references: [id])
-  jobApplicantId         Int?
-  JobApplicant           JobApplicant?              @relation(fields: [jobApplicantId], references: [id])
-  onboarding             Onboarding?
-  onboardingActivity     OnboardingActivity[]
-  transfer               Transfer[]
-  seperation             Seperation?
-  seperationActivities   SeperationActivity[]
-  notification           Notification[]
-  skillMap               SkillMap[]
-  ShiftRequest           ShiftRequest[]
-  promotion              Promotion[]
-  leaveApplications      LeaveApplication[]
-  ShiftAssignment        ShiftAssignment[]
-  Attendance             Attendance[]
-  AttendanceRequest      AttendanceRequest[]
-  leavePolicyAssignments LeavePolicyAssignment[]
-  leaveAlocations        LeaveAlocation[]
-  EmployeeTrainingEvent  EmployeeTrainingEvent[]
-  user                   User?
-  EmployeeCheckIns       EmployeeCheckIn[]
-  responsibilities       ResponsibilityAllocation[]
+  contactDetails          EmpContactDetails?
+  personalDetails         EmpPersonalDetails?
+  eduQualifications       EducationQualifications?
+  workHistory             WorkHistory?
+  internalWorkHistory     InternalWorkHistory?
+  salary                  Salary?
+  gradeId                 Int?
+  grade                   Grade?                     @relation(fields: [gradeId], references: [id])
+  healthInsuaranceId      Int?
+  healthInsuarance        HealthInsuarance?          @relation(fields: [healthInsuaranceId], references: [id])
+  designationId           Int
+  designation             Designation                @relation(fields: [designationId], references: [id])
+  departmentId            Int
+  department              Department                 @relation(fields: [departmentId], references: [id])
+  employmentTypeId        Int?
+  employmentType          EmploymentType?            @relation(fields: [employmentTypeId], references: [id])
+  jobApplicantId          Int?
+  JobApplicant            JobApplicant?              @relation(fields: [jobApplicantId], references: [id])
+  onboarding              Onboarding?
+  onboardingActivity      OnboardingActivity[]
+  transfer                Transfer[]
+  seperation              Seperation?
+  seperationActivities    SeperationActivity[]
+  notification            Notification[]
+  skillMap                SkillMap[]
+  ShiftRequest            ShiftRequest[]
+  promotion               Promotion[]
+  leaveApplications       LeaveApplication[]         @relation("employee")
+  actingLeaveApplications LeaveApplication[]         @relation("actingEmployee")
+  ShiftAssignment         ShiftAssignment[]
+  Attendance              Attendance[]
+  AttendanceRequest       AttendanceRequest[]
+  leavePolicyAssignments  LeavePolicyAssignment[]
+  leaveAlocations         LeaveAlocation[]
+  EmployeeTrainingEvent   EmployeeTrainingEvent[]
+  user                    User?
+  EmployeeCheckIns        EmployeeCheckIn[]
+  responsibilities        ResponsibilityAllocation[]
 
   @@map("employee")
 }
@@ -900,10 +901,12 @@ model LeaveApplication {
   totalLeaveDays Decimal  @map("total_leave_days") @db.Decimal(18, 2)
   status         String   @db.VarChar(40)
 
-  leaveTypeId Int
-  leaveType   LeaveType @relation(fields: [leaveTypeId], references: [id])
-  employeeId  Int
-  employee    Employee  @relation(fields: [employeeId], references: [id])
+  leaveTypeId      Int
+  leaveType        LeaveType @relation(fields: [leaveTypeId], references: [id])
+  employeeId       Int?
+  employee         Employee? @relation("employee", fields: [employeeId], references: [id])
+  actingEmployeeId Int?
+  actingEmployee   Employee? @relation("actingEmployee", fields: [actingEmployeeId], references: [id])
 
   leaveApplicationDetails LeaveApplicationDetail[]
 
