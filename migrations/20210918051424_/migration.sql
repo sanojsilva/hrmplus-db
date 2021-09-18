@@ -399,6 +399,7 @@ CREATE TABLE "appointment_letter" (
     "appointmentDate" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "letterSent" BOOLEAN DEFAULT false,
 
     PRIMARY KEY ("id")
 );
@@ -406,7 +407,7 @@ CREATE TABLE "appointment_letter" (
 -- CreateTable
 CREATE TABLE "custom_terms" (
     "id" SERIAL NOT NULL,
-    "newName" INTEGER NOT NULL,
+    "termId" INTEGER NOT NULL,
     "new_description" VARCHAR(255) NOT NULL,
     "letterId" INTEGER NOT NULL,
 
@@ -1087,7 +1088,7 @@ ALTER TABLE "offer_term_of_job_offer" ADD FOREIGN KEY ("joboffer_id") REFERENCES
 ALTER TABLE "appointment_letter" ADD FOREIGN KEY ("jobApplicantId") REFERENCES "job_applicant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "custom_terms" ADD FOREIGN KEY ("newName") REFERENCES "job_terms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "custom_terms" ADD FOREIGN KEY ("termId") REFERENCES "offer_term"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "custom_terms" ADD FOREIGN KEY ("letterId") REFERENCES "appointment_letter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
