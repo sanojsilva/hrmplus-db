@@ -29,6 +29,14 @@ const roles: Partial<Role>[] = [
     id: 7,
     name: "Super User",
   },
+  {
+    id: 8,
+    name: "HR Infromation Handler",
+  },
+  {
+    id: 9,
+    name: "HR Operational",
+  },
 ];
 
 export default roles;

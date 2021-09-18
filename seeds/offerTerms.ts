@@ -9,7 +9,8 @@ const offerTerms: Partial<OfferTerm>[] = [
   {
     id: 2,
     term: "Notice Period",
-    description: "",
+    description:
+      "This Agreement shall become and shall remain in effect until terminated by either party giving sixty (60) days' prior written notice of termination to the other party.",
   },
   {
     id: 3,
@@ -19,7 +20,8 @@ const offerTerms: Partial<OfferTerm>[] = [
   {
     id: 4,
     term: "Responsibilities",
-    description: "",
+    description:
+      "You will be required to perform duties the Company may assign to you in relation to the Company",
   },
   {
     id: 5,
@@ -28,13 +30,15 @@ const offerTerms: Partial<OfferTerm>[] = [
   },
   {
     id: 6,
-    term: "Department",
-    description: "",
+    term: "Anuual Salary",
+    description:
+      "You will be paid an all-inclusive allowance of LKR 215,000/- per year.",
   },
   {
     id: 7,
     term: "Working Hours",
-    description: "",
+    description:
+      "Working hours will start from 8.30AM - 5.30PM in Standard Time",
   },
   {
     id: 8,
@@ -44,12 +48,13 @@ const offerTerms: Partial<OfferTerm>[] = [
   {
     id: 9,
     term: "Probationary Period",
-    description: "",
+    description: "Employee will be Allocated 1 month ",
   },
   {
     id: 10,
-    term: "Annual Salary",
-    description: "",
+    term: "Salary Payment",
+    description:
+      "Payments will be carried out monthly for a designated bank account.",
   },
   {
     id: 11,
