@@ -199,6 +199,14 @@ const designations = [
     updatedAt: "2021-09-12T06:21:41.173Z",
     gradeId: 6,
   },
+  {
+    id: 26,
+    name: "Intern",
+    description: "Intern",
+    createdAt: "2021-09-12T06:21:41.173Z",
+    updatedAt: "2021-09-12T06:21:41.173Z",
+    gradeId: 7,
+  },
 ];
 
 export default designations;

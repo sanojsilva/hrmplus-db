@@ -842,8 +842,8 @@ model LeavePolicyDetail {
 model ShiftType {
   id              Int               @id @default(autoincrement())
   shiftName       String            @db.VarChar(100)
-  startTime       String            @db.VarChar(5)
-  endTime         String            @db.VarChar(5)
+  startTime       DateTime          @map("start_time")
+  endTime         DateTime          @map("end_time")
   isActive        Boolean           @default(true)
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
@@ -1064,13 +1064,13 @@ model ResponsibilityAllocation {
   responsibilityId   Int
   responsibilities   Responsibilities     @relation(fields: [responsibilityId], references: [id])
   weightage          Int
-  score              Int
+  score              Int?
   comments           String?
   status             ResponsibilityStatus
   expected           Int?
   completed          Int?
   deadline           DateTime
-  dateCompleted      DateTime?            @default(now())
+  dateCompleted      DateTime?
   assignedEmployeeId Int?
   assignedEmployee   Employee?            @relation(fields: [assignedEmployeeId], references: [id])
   createdAt          DateTime             @default(now()) @map("created_at")
