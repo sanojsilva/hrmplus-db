@@ -136,6 +136,20 @@ const leavePermissions: Partial<Permission>[] = [
     backendRoute: "",
     module: "leave",
   },
+  {
+    id: 419,
+    name: "My Leave Balance",
+    frontendRoute: "/dashboard/leave/my-leave-balance",
+    backendRoute: "",
+    module: "leave",
+  },
+  {
+    id: 420,
+    name: "My Leave Applications",
+    frontendRoute: "/dashboard/leave/my-leave-applications",
+    backendRoute: "",
+    module: "leave",
+  },
 ];
 
 export default leavePermissions;

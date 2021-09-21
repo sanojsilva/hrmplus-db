@@ -614,7 +614,7 @@ model HolidayList {
   totalHolidays     Int          @default(0)
   holidays          Holiday[]
   leavePeriod       LeavePeriod?
-  shiftType         ShiftType?
+  shiftType         ShiftType[]
   company           Company?
 
   @@map("holiday_list")
@@ -721,7 +721,7 @@ model SkillDetails {
 model TrainingDetails {
   id                 Int           @id @default(autoincrement())
   skillMapId         Int
-  skillDetails       SkillMap      @relation(fields: [skillMapId], references: [id])
+  skillDetails       SkillMap?     @relation(fields: [skillMapId], references: [id])
   trainingEventId    Int
   trainngEvent       TrainingEvent @relation(fields: [trainingEventId], references: [id])
   trainingFeedbackId Int?
